@@ -15,7 +15,6 @@ public abstract class BaseEntity {
     /**
      * id
      */
-    @Id
     private String id;
 
     public String getId() {
