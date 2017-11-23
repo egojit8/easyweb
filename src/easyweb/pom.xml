@@ -34,6 +34,7 @@
         <tk.mybatis.version>3.4.4</tk.mybatis.version>
         <shiro.version>1.4.0</shiro.version>
         <redis.client.version>2.9.0</redis.client.version>
+        <ulisesbocchio.version>1.16</ulisesbocchio.version>
     </properties>
 
 
@@ -116,7 +117,11 @@
             <artifactId>jedis</artifactId>
             <version>${redis.client.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>${ulisesbocchio.version}</version>
+        </dependency>
 
     </dependencies>
 
