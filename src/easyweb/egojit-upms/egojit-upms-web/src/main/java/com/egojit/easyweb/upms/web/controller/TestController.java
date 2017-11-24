@@ -23,7 +23,13 @@ public class TestController {
     @ResponseBody
     @RequestMapping("/test")
     public Object test(){
-       List<SysUser> list= userService.selectByRowBounds(null,new RowBounds(1,3));
+        List<SysUser> list= userService.selectByRowBounds(null,new RowBounds(1,3));
         return list;//list;
+    }
+    @ResponseBody
+    @RequestMapping("/add")
+    public Object add( SysUser user){
+        int count= userService.insert(user);
+        return "成功";//list;
     }
 }

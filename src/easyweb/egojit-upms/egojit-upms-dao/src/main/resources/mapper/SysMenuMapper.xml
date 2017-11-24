@@ -24,7 +24,7 @@
   </resultMap>
   <select id="selectByUserId" resultMap="BaseResultMap" resultType="com.egojit.easyweb.upms.model.SysMenu">
     SELECT DISTINCT
-    *
+    a.*
     FROM sys_menu a
     LEFT JOIN sys_menu p ON p.id = a.parent_id
     JOIN sys_role_menu rm ON rm.menu_id = a.id

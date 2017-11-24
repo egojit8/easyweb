@@ -13,7 +13,7 @@ import java.util.List;
  * Created by egojit on 2017/11/23.
  */
 @Transactional(readOnly = true)
-public abstract class BaseService<M extends Mapper<T>,T extends BaseEntity> {
+public abstract class BaseService<M extends Mapper<T>, T extends BaseEntity> {
 
     @Autowired
     protected M mapper;
@@ -21,6 +21,7 @@ public abstract class BaseService<M extends Mapper<T>,T extends BaseEntity> {
      * 日志对象
      */
     protected Logger logger = LoggerFactory.getLogger(getClass());
+
     public int deleteByPrimaryKey(Object o) {
         return mapper.deleteByPrimaryKey(o);
     }
@@ -30,10 +31,12 @@ public abstract class BaseService<M extends Mapper<T>,T extends BaseEntity> {
     }
 
     public int insert(T model) {
+        model.preInsert();
         return mapper.insert(model);
     }
 
     public int insertSelective(T model) {
+        model.preInsert();
         return mapper.insertSelective(model);
     }
 
@@ -66,6 +69,7 @@ public abstract class BaseService<M extends Mapper<T>,T extends BaseEntity> {
     }
 
     public int updateByPrimaryKey(T model) {
+        model.preUpdate();
         return mapper.updateByPrimaryKey(model);
     }
 
@@ -86,19 +90,19 @@ public abstract class BaseService<M extends Mapper<T>,T extends BaseEntity> {
     }
 
     public int updateByExample(T model, Object o) {
-        return mapper.updateByExample(model,o);
+        return mapper.updateByExample(model, o);
     }
 
     public int updateByExampleSelective(T model, Object o) {
-        return mapper.updateByExampleSelective(model,o);
+        return mapper.updateByExampleSelective(model, o);
     }
 
     public List<T> selectByExampleAndRowBounds(Object o, RowBounds rowBounds) {
-        return mapper.selectByExampleAndRowBounds(o,rowBounds);
+        return mapper.selectByExampleAndRowBounds(o, rowBounds);
     }
 
     public List<T> selectByRowBounds(T model, RowBounds rowBounds) {
-        return mapper.selectByRowBounds(model,rowBounds);
+        return mapper.selectByRowBounds(model, rowBounds);
     }
 
 }
