@@ -2,6 +2,9 @@
  * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
  */
 package com.egojit.easyweb.common.utils;
+import com.egojit.easyweb.common.Encodes;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +17,7 @@ import java.util.UUID;
  * @author Egojit
  * @version 2013-01-15
  */
-public class IdGen {
+public class IdGen implements SessionIdGenerator {
 
 	private static SecureRandom random = new SecureRandom();
 	
@@ -32,22 +35,27 @@ public class IdGen {
 		return Math.abs(random.nextLong());
 	}
 
-//	/**
-//	 * 基于Base62编码的SecureRandom随机生成bytes.
-//	 */
-//	public static String randomBase62(int length) {
-//		byte[] randomBytes = new byte[length];
-//		random.nextBytes(randomBytes);
-//		return Encodes.encodeBase62(randomBytes);
-//	}
-	
+	/**
+	 * 基于Base62编码的SecureRandom随机生成bytes.
+	 */
+	public static String randomBase62(int length) {
+		byte[] randomBytes = new byte[length];
+		random.nextBytes(randomBytes);
+		return Encodes.encodeBase62(randomBytes);
+	}
 
 
-	
+
 	public static void main(String[] args) {
 		System.out.println(IdGen.uuid());
 		System.out.println(IdGen.uuid().length());
-
+		for (int i=0; i<1000; i++){
+			System.out.println(IdGen.randomLong() + "  " + IdGen.randomBase62(5));
+		}
 	}
 
+	@Override
+	public Serializable generateId(Session session) {
+		return IdGen.uuid();
+	}
 }

@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping("/test")
+@RequestMapping("/admin")
 public class TestController {
 
     @Autowired

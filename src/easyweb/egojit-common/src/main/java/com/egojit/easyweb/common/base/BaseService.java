@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class BaseService<M extends Mapper<T>,T extends BaseEntity> {
 
     @Autowired
-    protected Mapper<T> mapper;
+    protected M mapper;
     /**
      * 日志对象
      */

@@ -1,9 +1,12 @@
 package com.egojit.easyweb.upms.model;
 
 import com.egojit.easyweb.common.base.BaseEntity;
+import com.egojit.easyweb.common.utils.StringUtils;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "sys_user")
 public class SysUser extends BaseEntity {
@@ -91,35 +94,31 @@ public class SysUser extends BaseEntity {
     @Column(name = "create_by")
     private String createBy;
 
-    /**
-     * 创建时间
-     */
-    @Column(name = "create_date")
-    private Date createDate;
 
-    /**
-     * 更新者
-     */
-    @Column(name = "update_by")
-    private String updateBy;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "update_date")
-    private Date updateDate;
 
     /**
      * 备注信息
      */
     private String remarks;
 
-    /**
-     * 删除标记
-     */
-    @Column(name = "del_flag")
-    private String delFlag;
 
+
+//    private List<SysRole> roleList= new ArrayList<SysRole>();
+
+    public  boolean isAdmin(){
+        if(StringUtils.isEmpty(userType)||userType=="0"){
+            return false;
+        }else
+            return true;
+    }
+
+//    public List<SysRole> getRoleList() {
+//        return roleList;
+//    }
+//
+//    public void setRoleList(List<SysRole> roleList) {
+//        this.roleList = roleList;
+//    }
 
     /**
      * 获取归属公司

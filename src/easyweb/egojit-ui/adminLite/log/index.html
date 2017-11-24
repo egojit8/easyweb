@@ -1,0 +1,133 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>日志管理</title>
+    <meta name="keywords" content="用户管理">
+    <meta name="description" content="用户管理">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'" href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"  href="../asset/css/fonts/iconfont.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"  href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'" href="../asset/css/style.min862f.css" rel="stylesheet">
+
+
+
+    <style>
+
+
+        #alertmod_table_list_2 {
+            top: 900px !important;
+        }
+    </style>
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-title ">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button id="btnDetail"  class="btn btn-default btn-sm" type="button" style="float: right; margin-left: 10px"><i class="icon egojit-front icon-delete"></i>&nbsp;删除</button>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="jqGrid_wrapper">
+                        <table id="table_list_2"></table>
+                        <div id="pager_list_2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'" src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'" src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/peity/jquery.peity.min.js'" src="../asset/js/plugins/peity/jquery.peity.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/i18n/grid.locale-cnffe4.js'" src="../asset/js/plugins/jqgrid/i18n/grid.locale-cnffe4.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/jquery.jqGrid.minffe4.js'" src="../asset/js/plugins/jqgrid/jquery.jqGrid.minffe4.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'" src="../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+<!--<script src="js/content.min.js?v=1.0.0"></script>-->
+<script>
+    $(document).ready(function () {
+
+        $("#btnAdd").click(function(){
+            app.windows("编辑","/admin/log/add","900px","500px");
+        });
+        $("#btnDetail").click(function(){
+            app.windows("详情","/admin/log/detail","900px","500px");
+        });
+
+        $.jgrid.defaults.styleUI = "Bootstrap";
+        $("#table_list_2").jqGrid({
+            url: "/admin/log/index",
+            datatype: "json",
+            mtype:"post",
+            height: 'auto',
+            autowidth: true,
+            shrinkToFit: true,
+            rowNum: 12,
+            rownumbers:true,
+            rowList: [12, 24, 36],
+            multiselect: true,//复选框
+            colNames: [ "标题", "请求方式", "请求地址", "时间"],
+            colModel: [{
+                name: "title",
+                index: "title",
+                editable: true,
+                width: 70
+            }, {name: "method", index: "method", editable: true, width: 30},
+                {
+                    name: "requestUri",
+                    index: "requestUri",
+                    editable: true,
+                    width: 100
+                }, {
+                    name: "createDate",
+                    index: "createDate",
+                    editable: true
+                }],
+            pager: "#pager_list_2",
+            prmNames:{page:"pageNo",rows:"pageSize"},
+            viewrecords: true,
+            add: true,
+            edit: true,
+            addtext: "Add",
+            edittext: "Edit",
+            hidegrid: false
+        });
+        $("#table_list_2").jqGrid("navGrid", "#pager_list_2", {
+            edit: true,
+            add: true,
+            del: true,
+            search: true
+        }, {height: 200, reloadAfterSubmit: true});
+        $("#table_list_2").setGridHeight($(window).height() - 190);
+        $(window).bind("resize", function () {
+            $(window).unbind("onresize");
+            var width = $(".jqGrid_wrapper").width();
+            $("#table_list_2").setGridWidth(width);
+            $("#table_list_2").setGridHeight($(window).height() - 190);
+            $(window).bind("onresize", this);
+        })
+    });
+</script>
+</body>
+</html>

@@ -1,6 +1,12 @@
 spring:
   application:
     name: upms-web
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: LEGACYHTML5
+    prefix: http://127.0.0.1:9999/
+    enabled: true
   datasource:
     name: era
     dbtype: mysql
