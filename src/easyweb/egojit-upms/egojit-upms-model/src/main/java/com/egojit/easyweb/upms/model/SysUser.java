@@ -397,23 +397,6 @@ public class SysUser extends CurdEndity {
         this.createBy = createBy;
     }
 
-    /**
-     * 获取创建时间
-     *
-     * @return create_date - 创建时间
-     */
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    /**
-     * 设置创建时间
-     *
-     * @param createDate 创建时间
-     */
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
 
 
 

@@ -30,25 +30,21 @@
                 <form class="form-inline">
                     <div class="col-sm-3 form-group">
                         <label style="width: 60px">登录名</label>
-                        <input type="email" placeholder="请输入您注册的E-mail" class="form-control">
+                        <input type="email" placeholder="请输入登录名" class="form-control">
                     </div>
                     <div class="col-sm-3 form-group">
                         <label style="width: 60px">姓名</label>
-                        <input type="password" placeholder="请输入密码" class="form-control">
+                        <input type="password" placeholder="请输入姓名" class="form-control">
                     </div>
                     <div class="col-sm-6 form-group">
+                        <button id="btnSearch"  class="btn btn-warning btn-sm" type="button" style="float: right; margin-left: 10px"><i class="icon egojit-front icon-search"></i>&nbsp;搜索</button>
                         <button id="btnDetail"  class="btn btn-default btn-sm" type="button" style="float: right; margin-left: 10px"><i class="icon egojit-front icon-delete"></i>&nbsp;删除</button>
-
                         <button id="btnAdd"  class="btn btn-primary btn-sm" type="button" style="float: right;"><i class="icon egojit-front icon-add"></i>&nbsp;添加</button>
+
                     </div>
 
                 </form>
             </div>
-            <!--<div class="row">-->
-                <!--<div class="col-lg-12">-->
-
-                <!--</div>-->
-            <!--</div>-->
 
         </div>
         <div class="ibox-content">
@@ -76,6 +72,10 @@
         $("#btnDetail").click(function(){
             app.windows("详情","/admin/user/detail","900px","500px");
         });
+
+        $("#btnSearch").click(function(){
+            app.post
+        });
         $.jgrid.defaults.styleUI = "Bootstrap";
         $("#table_list_2").jqGrid({
             url: "/admin/user/index",
@@ -87,7 +87,7 @@
             rowNum: 10,
             rowList: [10, 20, 30],
             multiselect: true,//复选框
-            colNames: ["序号", "登录名","姓名", "邮箱", "手机号", "电话","操作"],
+            colNames: ["序号", "登录名","姓名", "邮箱", "手机号","操作"],
             colModel: [{
                 name: "id",
                 index: "id",
@@ -107,13 +107,7 @@
             }, {name: "email", index: "email", editable: true, width: 100},
                 {
                     name: "phone",
-                    index: "phone",
-                    editable: true,
-                    width: 100
-                }, {
-                    name: "mobile",
-                    index: "mobile",
-                    width: 60
+                    index: "phone"
                 },
                 {
                     name: "id",
@@ -121,8 +115,8 @@
                     width: 60,
                     formatter:function (cellvalue, options, rowObject) {
                        return '<span class="center-block text-center">' +
-                           '<button  class="btn btn-info btn-xs " type="button" style="margin-right: 2px" ><i class="icon egojit-front icon-edit"></i>&nbsp;修改</button>' +
-                           '<button id="btnDetail"  class="btn btn-default btn-xs" type="button" style="margin-left: 2px"><i class="icon egojit-front icon-delete"></i>&nbsp;删除</button>'+
+                           '<button  class="btn btn-info btn-xs " type="button" style="margin-right: 5px;margin-left: 5px" ><i class="icon egojit-front icon-edit"></i>&nbsp;修改</button>' +
+                           '<button id="btnDetail"  class="btn btn-default btn-xs" type="button" style="margin-right: 5px;margin-left: 5px"><i class="icon egojit-front icon-delete"></i>&nbsp;删除</button>'+
                            '</span>';
                     }
                 }
