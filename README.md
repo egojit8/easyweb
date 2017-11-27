@@ -20,8 +20,8 @@ easyweb
 #### 后端技术:
 技术 | 名称 | 官网
 ----|------|----
-Spring boot | [http://projects.spring.io/spring-boot/](http://projects.spring.io/spring-boot/)
-Spirng cloud | 分布式整套解决方案 [http://projects.spring.io/spring-cloud/](http://projects.spring.io/spring-cloud/)
+Spring boot | 创建独立的Spring应用程序 |[http://projects.spring.io/spring-boot/](http://projects.spring.io/spring-boot/)
+Spirng cloud | 分布式整套解决方案 | [http://projects.spring.io/spring-cloud/](http://projects.spring.io/spring-cloud/)
 Spring Framework | 容器  | [http://projects.spring.io/spring-framework/](http://projects.spring.io/spring-framework/)
 SpringMVC | MVC框架  | [http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mvc](http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mvc)
 Apache Shiro | 安全框架  | [http://shiro.apache.org/](http://shiro.apache.org/)
