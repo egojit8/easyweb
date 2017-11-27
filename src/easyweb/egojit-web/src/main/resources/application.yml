@@ -38,7 +38,7 @@ spring:
 #logging:
 #  config: classpath:log4j2.xml
 mybatis:
-  type-aliases-package: tk.mybatis.springboot.model
+  type-aliases-package: com.egojit.easyweb.**.model
   mapper-locations: classpath*:mapper/**/*Mapper.xml
 mapper:
   not-empty: false

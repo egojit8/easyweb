@@ -6,6 +6,7 @@ import com.egojit.easyweb.common.utils.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ import java.util.Date;
 public abstract class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     public BaseEntity(){
-        this.delFlag=DEL_FLAG_NORMAL;
+
     }
     public BaseEntity(String id) {
         this();
@@ -35,29 +36,23 @@ public abstract class BaseEntity implements Serializable {
     @Transient
     protected boolean isNewRecord = true;
 
-    protected Date updateDate;	// 更新日期
-    protected String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
-    protected String createBy;	// 创建者id
-    protected Date createDate;	// 创建日期
-    protected String updateBy;	// 更新者Id
+    /**
+     * 创建者
+     */
+    @Column(name = "create_by")
+    private String createBy;
+
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_date")
+    private Date createDate;
 
 
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
 
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
 
-    public String getDelFlag() {
-        return delFlag;
-    }
 
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
-    }
 
     public String getCreateBy() {
         return createBy;
@@ -75,13 +70,7 @@ public abstract class BaseEntity implements Serializable {
         this.createDate = createDate;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
-    }
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
 
     public String getId() {
         return id;
@@ -91,12 +80,7 @@ public abstract class BaseEntity implements Serializable {
         this.id = id;
     }
 
-    /**
-     * 更新之前执行方法，需要手动调用
-     */
-    public void preUpdate(){
-        this.updateDate = new Date();
-    }
+
     /**
      * 插入之前执行方法，需要手动调用
      */
@@ -105,8 +89,7 @@ public abstract class BaseEntity implements Serializable {
         if (this.isNewRecord){
             setId(IdGen.uuid());
         }
-        this.updateDate = new Date();
-        this.createDate = this.updateDate;
+        this.createDate = new Date();
     }
     /**
      * 是否是新记录（默认：false），调用setIsNewRecord()设置新记录，使用自定义ID。

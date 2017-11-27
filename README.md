@@ -11,8 +11,15 @@ easyweb
 |    ├── egojit-upms-dao -- 数据访问层，通过通用mapper单表操作基本不用写代码
 |    ├── egojit-upms-model -- 数据库模型
 |    ├── egojit-upms-service -- 服务和业务逻辑层
-|    ├── egojit-upms-web -- web层，可以单独跑起来进行分布式部署（端口：9393）
+|    ├── egojit-upms-micro-service -- 微服务模块
+|    ├── egojit-upms-web -- web层管理界面，可以单独跑起来进行分布式部署（端口：9393）
 |    ├── egojit-upms-sso -- 基于shiro提供认证、授权、统一会话管理
+├── egojit-log -- 日志系统
+|    ├── egojit-log-dao -- 数据访问层，通过通用mapper单表操作基本不用写代码
+|    ├── egojit-log-model -- 数据库模型
+|    ├── egojit-log-service -- 服务和业务逻辑层
+|    ├── egojit-log-micro-service -- 微服务模块
+|    ├── egojit-log-web -- web层管理界面，可以单独跑起来进行分布式部署（端口：9595）
 ```
 
 ### 技术选型

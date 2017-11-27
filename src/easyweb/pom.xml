@@ -18,6 +18,7 @@
 
     <modules>
         <module>egojit-upms</module>
+        <module>egojit-log</module>
         <module>egojit-common</module>
         <module>egojit-web</module>
     </modules>

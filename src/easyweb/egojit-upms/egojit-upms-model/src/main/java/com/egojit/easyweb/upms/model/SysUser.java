@@ -1,6 +1,7 @@
 package com.egojit.easyweb.upms.model;
 
 import com.egojit.easyweb.common.base.BaseEntity;
+import com.egojit.easyweb.common.base.CurdEndity;
 import com.egojit.easyweb.common.utils.StringUtils;
 
 import javax.persistence.*;
@@ -9,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 @Table(name = "sys_user")
-public class SysUser extends BaseEntity {
+public class SysUser extends CurdEndity {
+
+
 
     /**
      * 归属公司
@@ -101,6 +104,10 @@ public class SysUser extends BaseEntity {
      */
     private String remarks;
 
+    /**
+     * 是否删除
+     */
+    protected String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
 
 
 //    private List<SysRole> roleList= new ArrayList<SysRole>();
@@ -408,32 +415,7 @@ public class SysUser extends BaseEntity {
         this.createDate = createDate;
     }
 
-    /**
-     * 获取更新者
-     *
-     * @return update_by - 更新者
-     */
-    public String getUpdateBy() {
-        return updateBy;
-    }
 
-    /**
-     * 设置更新者
-     *
-     * @param updateBy 更新者
-     */
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    /**
-     * 获取更新时间
-     *
-     * @return update_date - 更新时间
-     */
-    public Date getUpdateDate() {
-        return updateDate;
-    }
 
     /**
      * 设置更新时间
