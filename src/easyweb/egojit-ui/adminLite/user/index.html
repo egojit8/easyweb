@@ -70,14 +70,12 @@
 <!--<script src="js/content.min.js?v=1.0.0"></script>-->
 <script>
     $(document).ready(function () {
-
         $("#btnAdd").click(function(){
             app.windows("编辑","/admin/user/add","900px","500px");
         });
         $("#btnDetail").click(function(){
             app.windows("详情","/admin/user/detail","900px","500px");
         });
-
         $.jgrid.defaults.styleUI = "Bootstrap";
         $("#table_list_2").jqGrid({
             url: "/admin/user/index",
