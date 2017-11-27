@@ -37,6 +37,20 @@ public abstract class CurdService<M extends Mapper<T>, T extends CurdEndity> ext
         return mapper.delete(model);
     }
 
+    /**
+     * 删除对象
+     * @param ids  ids
+     * @return
+     */
+    public int deleteByIds(List<String> ids) {
+        int count=0;
+        if(ids!=null)
+            for (String id:ids ) {
+                count+=mapper.deleteByPrimaryKey(id);
+            }
+        return count;
+    }
+
 
     /**
      * 根据主键更新对象-会更新所有字段包括空值

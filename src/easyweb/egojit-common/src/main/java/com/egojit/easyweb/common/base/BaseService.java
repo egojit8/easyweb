@@ -1,5 +1,6 @@
 package com.egojit.easyweb.common.base;
 
+import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public abstract class BaseService<M extends Mapper<T>, T extends BaseEntity> {
      */
     public List<T> selectAll() {
         return mapper.selectAll();
+
     }
 
 
@@ -113,17 +115,7 @@ public abstract class BaseService<M extends Mapper<T>, T extends BaseEntity> {
         return mapper.selectByRowBounds(model, rowBounds);
     }
 
-    /**
-     * 根据对象条件查询分页数据-返回page对象
-     * @param model 对象
-     * @return 返回page对象
-     */
-    public Page<T> selectPage(T model, Page<T> page) {
-        long count= selectCount(model);
-        page.setRecords(count);
-        List<T> list=this.selectByRowBounds(model,new RowBounds(page.getPage(),page.getPageSize()));
-        return page.setList(list);
-    }
+
     /**
      * 根据example条件查询分页数据
      * @param o example条件
@@ -135,16 +127,28 @@ public abstract class BaseService<M extends Mapper<T>, T extends BaseEntity> {
     }
     /**
      * 根据对象条件查询分页数据-返回page对象
+     * @param example 对象
+     * @return 返回page对象
+     */
+    public Page<T> selectPageByExample(Object example, Page<T> page) {
+        long count= this.selectCountByExample(example);
+        page.setRecords(count);
+        PageHelper.startPage(page.getPage(),page.getPageSize());
+        List<T> list=this.selectByExample(example);
+        return page.setList(list);
+    }
+    /**
+     * 根据对象条件查询分页数据-返回page对象
      * @param model 对象
      * @return 返回page对象
      */
-    public Page<T> selectPageByExample(T model, Page<T> page) {
-        long count= this.selectCountByExample(model);
+    public Page<T> selectPage(T model, Page<T> page) {
+        long count= selectCount(model);
         page.setRecords(count);
-        List<T> list=this.selectByExampleAndRowBounds(model,new RowBounds(page.getPage(),page.getPageSize()));
+        PageHelper.startPage(page.getPage(),page.getPageSize());
+        List<T> list=this.select(model);
         return page.setList(list);
     }
-
 
     /**
      * 插入对象

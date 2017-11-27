@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * 全局配置类
- * @author ThinkGem
+ * @author Egojit
  * @version 2014-06-25
  */
 public class Global {

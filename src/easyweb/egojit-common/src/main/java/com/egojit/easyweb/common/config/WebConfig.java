@@ -1,11 +1,18 @@
 package com.egojit.easyweb.common.config;
 
+import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.egojit.easyweb.common.utils.StringUtils;
+import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConverter;
 
 /**
  * Created by egojit on 2017/11/24.
@@ -24,5 +31,19 @@ public class WebConfig {
                 container.addErrorPages(error500Page);
             }
         };
+    }
+
+    /**
+     * 配置使用springmvc fastjson
+     * @return
+     */
+    @Bean
+    public HttpMessageConverters fastJsonHttpMessageConverters() {
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat);
+        fastConverter.setFastJsonConfig(fastJsonConfig);
+        HttpMessageConverter<?> converter = fastConverter;
+        return new HttpMessageConverters(converter);
     }
 }

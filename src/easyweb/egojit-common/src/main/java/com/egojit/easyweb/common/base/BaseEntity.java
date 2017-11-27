@@ -1,5 +1,6 @@
 package com.egojit.easyweb.common.base;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.egojit.easyweb.common.Global;
 import com.egojit.easyweb.common.utils.IdGen;
 import com.egojit.easyweb.common.utils.StringUtils;
@@ -112,7 +113,7 @@ public abstract class BaseEntity implements Serializable {
     /**
      * 全局变量对象
      */
-    @JsonIgnore
+    @JSONField(serialize = false)
     public Global getGlobal() {
         return Global.getInstance();
     }
