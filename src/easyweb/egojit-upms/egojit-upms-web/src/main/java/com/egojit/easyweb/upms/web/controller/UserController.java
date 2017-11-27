@@ -42,8 +42,7 @@ public class UserController extends BaseWebController {
     public Page<SysUser> index(HttpServletRequest request, HttpServletResponse response){
         SysUser user=new SysUser();
         Page<SysUser> pg=new Page<SysUser>(request,response);
-        List<SysUser> list = userService.selectByRowBounds(user,new RowBounds(pg.getPage(),pg.getPageSize()));
-        pg.setList(list);
+        pg= userService.selectPage(user,pg);
         return pg;
     }
 

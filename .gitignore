@@ -2,3 +2,4 @@
 /src/easyweb/*.iml
 /src/easyweb/.idea
 target
+/src/temp
