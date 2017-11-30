@@ -3,3 +3,5 @@
 /src/easyweb/.idea
 target
 /src/temp
+/src/easyweb/egojit-upms/egojit-upms-common/*.iml
+/src/easyweb/egojit-upms/egojit-upms-micro-service/*.log
