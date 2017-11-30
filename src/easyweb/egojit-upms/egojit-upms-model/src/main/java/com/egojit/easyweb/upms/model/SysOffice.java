@@ -1,12 +1,14 @@
 package com.egojit.easyweb.upms.model;
 
 import com.egojit.easyweb.common.base.BaseEntity;
+import com.egojit.easyweb.common.base.CurdEndity;
+import com.egojit.easyweb.common.base.CurdService;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Table(name = "sys_office")
-public class SysOffice extends BaseEntity {
+public class SysOffice extends CurdEndity {
 
 
     /**

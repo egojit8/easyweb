@@ -6906,6 +6906,16 @@ body.skin-3 {
     background-color: #1ab394
 }
 
+
+.btn_no_radius{
+    border-radius:0px
+}
+.btn_blue{
+    background-color: #3c8dbc;
+    color: #ffffff;
+    border-color: #3c8dbc;
+}
+
 @media (min-width: 768px) {
     .bs-glyphicons {
         margin-right: 0;

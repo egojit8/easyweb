@@ -17,6 +17,8 @@
         <module>egojit-upms-dao</module>
         <module>egojit-upms-service</module>
         <module>egojit-upms-sso</module>
+        <module>egojit-upms-common</module>
+        <module>egojit-upms-micro-service</module>
     </modules>
 
     <dependencies>

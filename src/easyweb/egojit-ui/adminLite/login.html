@@ -9,7 +9,11 @@
     <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/login.css'" href="asset/css/login.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-
+<script type="text/javascript">
+    if(window.top!=window.self){
+        window.top.location.href=location.href;
+    }
+</script>
 <div class="login">
     <div class="message">EasyWeb-登录</div>
     <div id="darkbannerwrap"></div>

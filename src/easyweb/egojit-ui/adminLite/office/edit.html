@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_jqgrid.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:02 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>部门编辑</title>
+    <meta name="keywords" content="用户添加">
+    <meta name="description" content="用户添加">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css"
+          rel="stylesheet">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/font-awesome.min.css'" rel="stylesheet"
+          href="../asset/css/font-awesome.min.css"
+    />
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../asset/css/style.min862f.css" rel="stylesheet">
+
+
+</head>
+
+<body class="gray-bg">
+<form class="form-horizontal m-t" id="formSubmit">
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox ">
+            <div class="ibox-title">
+                用户信息
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <input type="hidden" name="id" id="id"/>
+                    <label class="col-sm-2 control-label">姓名：</label>
+                    <div class="col-sm-4">
+                        <input id="name" name="name" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
+                    </div>
+                    <label class="col-sm-2 control-label">手机：</label>
+                    <div class="col-sm-4">
+                        <input id="mobile" name="mobile" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入工号</span>-->
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">公司机构：</label>
+                    <div class="col-sm-10" id="divOffice">
+                        <input type="hidden" name="companyId" id="companyId"/>
+                        <input type="hidden" name="officeId" id="officeId"/>
+                        <!--<select class="form-control m-b" name="companyId"  id="companyId">-->
+                            <!--<option value="">请选择公司</option>-->
+                        <!--</select>-->
+                    </div>
+                    <!--<label class="col-sm-2 control-label">部门：</label>-->
+                    <!--<div class="col-sm-4">-->
+                        <!--<input id="officeId" name="officeId" class="form-control" type="text">-->
+                        <!--&lt;!&ndash;<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>&ndash;&gt;-->
+                    <!--</div>-->
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">工号：</label>
+                    <div class="col-sm-4">
+                        <input id="no" name="no" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入工号</span>-->
+                    </div>
+                    <label class="col-sm-2 control-label">邮箱：</label>
+                    <div class="col-sm-4">
+                        <input id="email" name="email" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">备注：</label>
+                    <div class="col-sm-10">
+                        <textarea id="remarks" name="remarks" class="form-control"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                账号信息
+            </div>
+            <div class="ibox-content">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">账号：</label>
+                    <div class="col-sm-4">
+                        <input id="loginName" name="loginName" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
+                    </div>
+                    <label class="col-sm-2 control-label">密码：</label>
+                    <div class="col-sm-4">
+                        <input id="password" name="password" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入工号</span>-->
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-sm-2 control-label">是否管理员：</label>
+                    <div class="col-sm-10">
+                        <label><input type="checkbox" class="checkbox" id="userType" name="userType"
+                                      value="1">管理员</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-3">
+                        <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/jquery.validate.min.js'"
+        src="../asset/js/plugins/validate/jquery.validate.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/messages_zh.min.js'"
+        src="../asset/js/plugins/validate/messages_zh.min.js"></script>
+<!--<script src="js/demo/form-validate-demo.min.js"></script>-->
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+<script type="text/javascript">
+    //初始化机构
+    function getOffice(pid) {
+        app.post("/admin/office/list",{parentId:pid},function (data) {
+            if(data&&data.length>0)
+            {
+                var html='<select class="form-control m-b" style="width: 150px; float: left;" name="officeIds"  id="officeId'+pid+'">'+
+                    '<option value="">请选择机构</option>';
+                $.each(data,function (index,item) {
+//                        $('#companyId').append('<option optType="'+item.type+'" value="'+item.id+'">'+item.name+'</option>');
+                    html+='<option optType="'+item.type+'" value="'+item.id+'">'+item.name+'</option>';
+                });
+                html+='</select>';
+                $("#divOffice").append(html);
+                if(pid!="0"){$('#officeId'+pid).css("margin-left","10px")}
+                /**
+                 * 选择事件
+                 */
+                $('#officeId'+pid).change(function (val) {
+                    var $select=$(this).children('option:selected');//这就是selected的值
+                    $(this).nextAll().remove();
+                    var t=$select.attr("optType");
+                    if(t==1){//表示公司
+                        $("#companyId").val($select.val());
+                        getOffice($select.val());
+                    }else{//部门
+                        $("#officeId").val($select.val());
+                    }
+
+                });
+
+            }
+
+        });
+    }
+
+    //渲染界面
+    function  initFormView(data) {
+        getOffice(data.companyId);
+        app.initFormView("#formSubmit",data);
+    }
+
+    //获取数据
+    function initView() {
+        var id=app.getRequest()["id"];
+        if(id&&id.length>0){//编辑
+            app.post("/admin/user/detail",{id:id},function (data) {
+                initFormView(data);
+            });
+        }else{//新增
+            getOffice("0");
+        }
+
+    }
+
+    
+    $().ready(function () {
+        initView();
+        $.validator.setDefaults({
+            highlight: function (e) {
+                $(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+            }, success: function (e) {
+                e.closest(".form-group").removeClass("has-error").addClass("has-success")
+            }, errorElement: "span", errorPlacement: function (e, r) {
+                e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+            }, errorClass: "help-block m-b-none", validClass: "help-block m-b-none"
+        })
+        var e = "<i class='fa fa-times-circle'></i> ";
+        var formValidate = {
+            rules: {
+                name: "required",
+                mobile: "required",
+                companyId:"required",
+                officeId: "required"
+            },
+            messages: {
+                name: e + "请输入姓名",
+                mobile: e + "请输入手机号",
+                companyId: e + "请输选择公司",
+                officeId: e + "请输选择部门"
+            },
+            debug: true,
+            submitHandler: function (form) {
+                var parm=$("#formSubmit").serialize();
+                console.log(parm);
+                app.post("/admin/user/edit", parm, function (data) {
+                    app.close();
+                    var grid = window.parent.location.reload(); //刷新父页面
+                });
+            }
+        };
+        $("#formSubmit").validate(formValidate);
+    });
+</script>
+</body>
+</html>

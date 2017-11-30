@@ -92,7 +92,9 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			ByteSource credentialsSalt = ByteSource.Util.bytes(user.getLoginName());
 
 
-			SimpleAuthenticationInfo info =  new SimpleAuthenticationInfo(new Principal(user),
+//			SimpleAuthenticationInfo info =  new SimpleAuthenticationInfo(new Principal(user),
+//					user.getPassword(), credentialsSalt, user.getName());
+			SimpleAuthenticationInfo info =  new SimpleAuthenticationInfo(user.getLoginName(),
 					user.getPassword(), credentialsSalt, user.getName());
 			return info;
 		} else {
@@ -126,7 +128,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		Principal principal = (Principal) getAvailablePrincipal(principals);
+		String principal = (String) getAvailablePrincipal(principals);
 		// 获取当前已登录的用户
 //		if (!Global.TRUE.equals(Global.getInstance().getConfig("user.multiAccountLogin"))){
 //			Collection<Session> sessions = getSystemService().getSessionDao().getActiveSessions(true, principal, UserUtils.getSession());
@@ -144,7 +146,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 //				}
 //			}
 //		}
-		SysUser user =sysUserService.getByLoginName(principal.getLoginName());
+		SysUser user =sysUserService.getByLoginName(principal);
 		if (user != null) {
 			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 			List<SysMenu> list = UserUtils.getMenuList();
@@ -246,68 +248,68 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 
 
 	
-	/**
-	 * 授权用户信息
-	 */
-	public static class Principal implements Serializable {
-
-		private static final long serialVersionUID = 1L;
-		
-		private String id; // 编号
-		private String loginName; // 登录名
-		private String name; // 姓名
-//		private boolean mobileLogin; // 是否手机登录
-		
-//		private Map<String, Object> cacheMap;
-
-		public Principal(SysUser user) {
-			this.id = user.getId();
-			this.loginName = user.getLoginName();
-			this.name = user.getName();
-//			this.mobileLogin = mobileLogin;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public String getLoginName() {
-			return loginName;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-//		public boolean isMobileLogin() {
-//			return mobileLogin;
+//	/**
+//	 * 授权用户信息
+//	 */
+//	public static class Principal implements Serializable {
+//
+//		private static final long serialVersionUID = 1L;
+//
+//		private String id; // 编号
+//		private String loginName; // 登录名
+//		private String name; // 姓名
+////		private boolean mobileLogin; // 是否手机登录
+//
+////		private Map<String, Object> cacheMap;
+//
+//		public Principal(SysUser user) {
+//			this.id = user.getId();
+//			this.loginName = user.getLoginName();
+//			this.name = user.getName();
+////			this.mobileLogin = mobileLogin;
 //		}
-
-//		@JsonIgnore
-//		public Map<String, Object> getCacheMap() {
-//			if (cacheMap==null){
-//				cacheMap = new HashMap<String, Object>();
+//
+//		public String getId() {
+//			return id;
+//		}
+//
+//		public String getLoginName() {
+//			return loginName;
+//		}
+//
+//		public String getName() {
+//			return name;
+//		}
+//
+////		public boolean isMobileLogin() {
+////			return mobileLogin;
+////		}
+//
+////		@JsonIgnore
+////		public Map<String, Object> getCacheMap() {
+////			if (cacheMap==null){
+////				cacheMap = new HashMap<String, Object>();
+////			}
+////			return cacheMap;
+////		}
+//
+//		/**
+//		 * 获取SESSIONID
+//		 */
+//		public String getSessionid() {
+//			try{
+//				return (String) UserUtils.getSession().getId();
+//			}catch (Exception e) {
+//				return "";
 //			}
-//			return cacheMap;
 //		}
-
-		/**
-		 * 获取SESSIONID
-		 */
-		public String getSessionid() {
-			try{
-				return (String) UserUtils.getSession().getId();
-			}catch (Exception e) {
-				return "";
-			}
-		}
-		
-		@Override
-		public String toString() {
-			return id;
-		}
-
-	}
+//
+//		@Override
+//		public String toString() {
+//			return id;
+//		}
+//
+//	}
 
 
 

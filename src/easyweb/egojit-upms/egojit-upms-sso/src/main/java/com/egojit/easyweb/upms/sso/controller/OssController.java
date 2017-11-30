@@ -7,6 +7,7 @@ import com.egojit.easyweb.common.base.BaseResult;
 import com.egojit.easyweb.common.base.BaseResultCode;
 import com.egojit.easyweb.common.utils.CookieUtils;
 import com.egojit.easyweb.common.utils.MD5Util;
+import com.egojit.easyweb.common.utils.StringUtils;
 import com.egojit.easyweb.upm.service.SysUserService;
 import com.egojit.easyweb.upms.model.SysUser;
 import com.egojit.easyweb.upms.sso.UserUtils;
@@ -45,7 +46,7 @@ public class OssController extends BaseApiController {
     @GetMapping("/login")
     @ApiOperation(value = "登录界面")
     public String login(HttpServletRequest request, HttpServletResponse response) {
-        SystemAuthorizingRealm.Principal principal = UserUtils.getPrincipal();
+        String principal = UserUtils.getPrincipal();
 
 //		// 默认页签模式
 //		String tabmode = CookieUtils.getCookie(request, "tabmode");
@@ -63,7 +64,7 @@ public class OssController extends BaseApiController {
         }
 
         // 如果已经登录，则跳转到管理首页
-        if(principal != null){
+        if(StringUtils.isNotEmpty(principal)){
             return "redirect:/admin/index";
         }
         return "login";

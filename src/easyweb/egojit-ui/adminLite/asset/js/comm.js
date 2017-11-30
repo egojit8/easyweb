@@ -116,9 +116,10 @@
                 content: url
             });
         },
+
         list: function (option) {
             $.jgrid.defaults.styleUI = "Bootstrap";
-            var $jqGrid =$("#table_list");
+            var $jqGrid = $("#table_list");
             $jqGrid.jqGrid({
                 url: option.url,
                 datatype: "json",
@@ -133,7 +134,7 @@
                 colNames: option.colNames,
                 colModel: option.colModel,
                 pager: "#pager_list",
-                multikey:option.multikey?option.multikey:'id',
+                multikey: option.multikey ? option.multikey : 'id',
                 prmNames: {page: "pageNo", rows: "pageSize"},
                 viewrecords: true,
                 add: true,
@@ -149,24 +150,64 @@
                     postData: postData
                 }).trigger("reloadGrid");
             });
+            $("#btnRest").click(function () {
+                $("#formSearch input").val("");
+                $("#formSearch select").val("");
+                var postData = app.serializeNotNull($("#formSearch").serialize());
+                console.log(postData);
+                $jqGrid.trigger("reloadGrid");
+            });
+
 //        $("#table_list_2").jqGrid("navGrid", "#pager_list_2", {
 //            edit: true,
 //            add: true,
 //            del: true
 //        }, {height: 200, reloadAfterSubmit: true});
-            $("#table_list").setGridHeight($(window).height() - 190);
+            $("#table_list").setGridHeight($(window).height() - 230);
             $(window).bind("resize", function () {
                 $(window).unbind("onresize");
                 var width = $(".jqGrid_wrapper").width();
                 $("#table_list").setGridWidth(width);
-                $("#table_list").setGridHeight($(window).height() - 190);
+                $("#table_list").setGridHeight($(window).height() - 230);
                 $(window).bind("onresize", this);
             });
             return $jqGrid;
+        },
+        getRequest: function () {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        },
+        initFormView: function (id, data) {
+            var $elementsTextA = $(id+ " textarea");
+            $.each($elementsTextA, function (index, val) {
+                console.log(val);
+                var name = $(val).attr("name");
+                $(val).text(data[name]);
+
+            })
+            var $elements = $(id+ " input");
+            $.each($elements, function (index, val) {
+                console.log(val);
+                var name = $(val).attr("name");
+                $(val).val(data[name]);
+
+            })
+
+
         }
     }
     var app = new App();
     window.app = app;
+
+
 })();
 
 

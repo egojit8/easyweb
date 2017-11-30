@@ -11,13 +11,11 @@ import com.egojit.easyweb.upms.dao.mapper.SysUserMapper;
 import com.egojit.easyweb.upms.model.SysMenu;
 import com.egojit.easyweb.upms.model.SysRole;
 import com.egojit.easyweb.upms.model.SysUser;
-import com.egojit.easyweb.upms.sso.security.SystemAuthorizingRealm;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.InvalidSessionException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 import java.util.List;
 
@@ -46,24 +44,26 @@ public class UserUtils {
 	public static final String CACHE_OFFICE_LIST = "officeList";
 	public static final String CACHE_OFFICE_ALL_LIST = "officeAllList";
 	
-	/**
-	 * 根据ID获取用户
-	 * @param id
-	 * @return 取不到返回null
-	 */
-	public static SysUser get(String id){
-		SysUser user = (SysUser) CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + id);
-		if (user ==  null){
-			user = userMapper.selectByPrimaryKey(id);
-			if (user == null){
-				return null;
-			}
-//			user.setRoleList(roleMapper.getRolesByUser(user));
-			CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
-			CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
-		}
-		return user;
-	}
+//	/**
+//	 * 根据ID获取用户
+//	 * @param loginName 登录名
+//	 * @return 取不到返回null
+//	 */
+//	public static SysUser get(String loginName){
+//		SysUser user = (SysUser) CacheUtils.get(USER_CACHE, USER_CACHE_ID_ + loginName);
+//		if (user ==  null){
+//			SysUser selectUser=new SysUser();
+//			selectUser.setLoginName(loginName);
+//			user = userMapper.getByLoginName(selectUser);
+//			if (user == null){
+//				return null;
+//			}
+////			user.setRoleList(roleMapper.getRolesByUser(user));
+//			CacheUtils.put(USER_CACHE, USER_CACHE_ID_ + user.getId(), user);
+//			CacheUtils.put(USER_CACHE, USER_CACHE_LOGIN_NAME_ + user.getLoginName(), user);
+//		}
+//		return user;
+//	}
 	
 	/**
 	 * 根据登录名获取用户
@@ -118,9 +118,9 @@ public class UserUtils {
 	 * @return 取不到返回 new User()
 	 */
 	public static SysUser getUser(){
-		SystemAuthorizingRealm.Principal principal = getPrincipal();
+		String principal = getPrincipal();
 		if (principal!=null){
-			SysUser user = get(principal.getId());
+			SysUser user = getByLoginName(principal);
 			if (user != null){
 				return user;
 			}
@@ -228,10 +228,10 @@ public class UserUtils {
 	/**
 	 * 获取当前登录者对象
 	 */
-	public static SystemAuthorizingRealm.Principal getPrincipal(){
+	public static String getPrincipal(){
 		try{
 			Subject subject = SecurityUtils.getSubject();
-			SystemAuthorizingRealm.Principal principal = (SystemAuthorizingRealm.Principal)subject.getPrincipal();
+			String principal = (String)subject.getPrincipal();
 			if (principal != null){
 				return principal;
 			}

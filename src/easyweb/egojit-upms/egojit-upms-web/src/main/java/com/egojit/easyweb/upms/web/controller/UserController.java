@@ -5,8 +5,10 @@ import com.egojit.easyweb.common.base.BaseResult;
 import com.egojit.easyweb.common.base.BaseResultCode;
 import com.egojit.easyweb.common.base.BaseWebController;
 import com.egojit.easyweb.common.base.Page;
+import com.egojit.easyweb.common.utils.MD5Util;
 import com.egojit.easyweb.common.utils.StringUtils;
 import com.egojit.easyweb.upm.service.SysUserService;
+import com.egojit.easyweb.upms.common.utils.UserUtils;
 import com.egojit.easyweb.upms.model.SysUser;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.annotations.Api;
@@ -65,15 +67,43 @@ public class UserController extends BaseWebController {
     public BaseResult delete(String ids){
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"删除成功");
         List<String> idList= JSON.parseArray(ids,String.class);
-
         int count= userService.deleteByIds(idList);
         _log.info("删除了："+count+"数据");
         return result;
     }
 
-    @RequestMapping("/add")
+    @RequestMapping("/edit")
     @ApiOperation(value = "用户添加界面")
     public String add(){
-        return "/user/add";
+        return "/user/edit";
+    }
+
+    @ApiOperation(value = "用户添加界面")
+    @PostMapping("/edit")
+    @ResponseBody
+    public BaseResult edit(SysUser user){
+        BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
+        SysUser curentUser= UserUtils.getUser();
+        if(StringUtils.isEmpty(user.getId())){
+            user.setCreateBy(curentUser.getId());
+            user.setUpdateBy(curentUser.getId());
+            String ecPwd= MD5Util.shiroPwd(user.getPassword(),user.getLoginName());
+            user.setPassword(ecPwd);
+            userService.insert(user);
+        }else {
+            user.setUpdateBy(curentUser.getId());
+            userService.updateByPrimaryKeySelective(user);
+        }
+        return result;
+    }
+
+    @ApiOperation(value = "用户详情")
+    @PostMapping("/detail")
+    @ResponseBody
+    public BaseResult detail(String id){
+        BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
+        SysUser model=  userService.selectByPrimaryKey(id);
+        result.setData(model);
+        return result;
     }
 }

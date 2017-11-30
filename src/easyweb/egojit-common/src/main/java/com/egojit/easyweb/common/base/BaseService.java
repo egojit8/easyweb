@@ -1,5 +1,6 @@
 package com.egojit.easyweb.common.base;
 
+import com.egojit.easyweb.common.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -7,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.entity.Example;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -85,22 +89,53 @@ public abstract class BaseService<M extends Mapper<T>, T extends BaseEntity> {
 
 
 
+    private  Class <T> getTClass(){
+        Class <T> tClass=(Class < T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        return tClass;
+    }
+
     /**
      * 根据example条件查询数据
-     * @param o
+     * @param example
      * @return
      */
-    public List<T> selectByExample(Object o) {
-        return mapper.selectByExample(o);
+    public List<T> selectByExample(Example example) {
+        if(example==null){
+
+            example=new Example(getTClass());
+        }
+        String order= example.getOrderByClause();
+        if(StringUtils.isEmpty(order)){
+            example.setOrderByClause(" create_date DESC");
+        }
+        return mapper.selectByExample(example);
+    }
+
+    /**
+     * 根据example条件查询分页数据
+     * @param example example条件
+     * @param rowBounds 分页条件
+     * @return
+     */
+    public List<T> selectByExampleAndRowBounds(Example example, RowBounds rowBounds) {
+        if(example==null){
+
+            example=new Example(getTClass());
+        }
+        String order= example.getOrderByClause();
+        if(StringUtils.isEmpty(order)){
+            example.setOrderByClause(" create_date DESC");
+        }
+        return mapper.selectByExampleAndRowBounds(example, rowBounds);
     }
 
     /**
      * 根据example条件查询数据记录数
-     * @param o
+     * @param example
      * @return
      */
-    public int selectCountByExample(Object o) {
-        return mapper.selectCountByExample(o);
+    public int selectCountByExample(Example example) {
+        return mapper.selectCountByExample(example);
     }
 
 
@@ -112,28 +147,24 @@ public abstract class BaseService<M extends Mapper<T>, T extends BaseEntity> {
      * @return 返回数据列表
      */
     public List<T> selectByRowBounds(T model, RowBounds rowBounds) {
+
         return mapper.selectByRowBounds(model, rowBounds);
     }
 
 
-    /**
-     * 根据example条件查询分页数据
-     * @param o example条件
-     * @param rowBounds 分页条件
-     * @return
-     */
-    public List<T> selectByExampleAndRowBounds(Object o, RowBounds rowBounds) {
-        return mapper.selectByExampleAndRowBounds(o, rowBounds);
-    }
+
     /**
      * 根据对象条件查询分页数据-返回page对象
      * @param example 对象
      * @return 返回page对象
      */
-    public Page<T> selectPageByExample(Object example, Page<T> page) {
-        long count= this.selectCountByExample(example);
-        page.setRecords(count);
-        PageHelper.startPage(page.getPage(),page.getPageSize());
+    public Page<T> selectPageByExample(Example example, Page<T> page) {
+        if(!page.isDisabled()) {
+            long count= this.selectCountByExample(example);
+            page.setRecords(count);
+            PageHelper.startPage(page.getPage(), page.getPageSize());
+        }
+
         List<T> list=this.selectByExample(example);
         return page.setList(list);
     }
@@ -143,9 +174,11 @@ public abstract class BaseService<M extends Mapper<T>, T extends BaseEntity> {
      * @return 返回page对象
      */
     public Page<T> selectPage(T model, Page<T> page) {
-        long count= selectCount(model);
-        page.setRecords(count);
-        PageHelper.startPage(page.getPage(),page.getPageSize());
+        if(!page.isDisabled()) {
+            long count= selectCount(model);
+            page.setRecords(count);
+            PageHelper.startPage(page.getPage(),page.getPageSize());
+        }
         List<T> list=this.select(model);
         return page.setList(list);
     }

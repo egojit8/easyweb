@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>用户管理</title>
-    <meta name="keywords" content="用户管理">
-    <meta name="description" content="用户管理">
+    <title>机构管理</title>
+    <meta name="keywords" content="机构管理">
+    <meta name="description" content="机构管理">
 
     <link rel="shortcut icon" href="favicon.ico">
     <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
@@ -26,44 +26,53 @@
 </head>
 
 <body class="gray-bg">
-<div class="animated fadeInRight">
-    <div class="ibox ">
-        <div class="ibox-title ">
-            <div class="row">
-                <form class="form-inline" id="formSearch">
-                    <div class="col-sm-3 form-group">
-                        <label style="width: 60px">登录名</label>
-                        <input type="text" name="loginName" placeholder="请输入登录名" class="form-control">
-                    </div>
-                    <div class="col-sm-3 form-group">
-                        <label style="width: 60px">姓名</label>
-                        <input type="text" name="name" placeholder="请输入姓名" class="form-control">
-                    </div>
-                    <div class="col-sm-6 form-group">
-                        <button id="btnRest" onclick="reset()" class="btn btn-primary btn-xs skin_blue_buttom" style="float: right; margin-left: 10px" type="button"><i
-                                class="icon egojit-front icon-add"></i>&nbsp;重置
-                        </button>
-                        <button id="btnSearch" onclick="search()" class="btn btn-warning btn-xs" type="button"
-                                style="float: right;"><i class="icon egojit-front icon-search"></i>&nbsp;搜索
-                        </button>
-
-                    </div>
-
-                </form>
-            </div>
-
+<div class="row animated fadeInRight">
+    <div class="col-sm-2" style="padding-left: 0px;padding-right: 0px">
+        <div class="ibox">
+            <div class="ibox-title">上级机构</div>
+            <div class="ibox-content"></div>
         </div>
-        <div class="ibox-content" style="padding-top: 10px">
-            <div class="row" style="margin-bottom: 10px">
-                <button id="btnDelete" onclick="del()" class="btn btn-primary btn_no_radius btn-xs " type="button"><i class="icon egojit-front icon-delete"></i>&nbsp;删除
-                </button>
-                <button id="btnAdd" onclick="add()" class="btn btn-primary btn_no_radius btn-xs " type="button"><i
-                        class="icon egojit-front icon-add"></i>&nbsp;添加
-                </button>
+    </div>
+    <div class="col-sm-10" style="padding-left: 5px">
+        <div class="ibox ">
+            <div class="ibox-title ">
+                <div class="row">
+                    <form class="form-inline" id="formSearch">
+
+                        <div class="col-sm-8 form-group">
+                            <label style="width: 60px">名称</label>
+                            <input type="text" name="name" placeholder="请输入名称" class="form-control">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <button id="btnRest" class="btn btn-primary btn-xs skin_blue_buttom"
+                                    style="float: right; margin-left: 10px" type="button"><i
+                                    class="icon egojit-front icon-add"></i>&nbsp;重置
+                            </button>
+                            <button id="btnSearch" class="btn btn-warning btn-xs" type="button"
+                                    style="float: right;"><i class="icon egojit-front icon-search"></i>&nbsp;搜索
+                            </button>
+
+                        </div>
+
+                    </form>
+                </div>
+
             </div>
-            <div class="jqGrid_wrapper">
-                <table id="table_list"></table>
-                <div id="pager_list"></div>
+            <div class="ibox-content" style="padding-top: 10px">
+                <div class="row" style="margin-bottom: 10px">
+                    <button id="btnDelete" onclick="del()" class="btn btn-primary btn_no_radius btn-xs "
+                            type="button"><i
+                            class="icon egojit-front icon-delete"></i>&nbsp;删除
+                    </button>
+                    <button id="btnAdd" onclick="add()" class="btn btn-primary btn_no_radius btn-xs " type="button">
+                        <i
+                                class="icon egojit-front icon-add"></i>&nbsp;添加
+                    </button>
+                </div>
+                <div class="jqGrid_wrapper">
+                    <table id="table_list"></table>
+                    <div id="pager_list"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -86,7 +95,7 @@
 <script type="text/javascript">
     var $jqGridObj;
     //删除
-    function del(id){
+    function del(id) {
         var selectIds = [];
         if (!id || id.length <= 0) {
             selectIds = $jqGridObj.jqGrid('getGridParam', 'selarrrow');
@@ -99,7 +108,7 @@
             return;
         }
         app.confirm("确定删除该数据？", function () {
-            app.post("/admin/user/delete", {ids: JSON.stringify(selectIds)}, function (data) {
+            app.post("/admin/office/delete", {ids: JSON.stringify(selectIds)}, function (data) {
                 app.close();
                 app.tip("删除成功！");
                 $jqGridObj.trigger("reloadGrid");
@@ -108,51 +117,55 @@
     };
     //新增
     function add() {
-        app.windows("编辑", "/admin/user/edit", "900px", "550px");
+        app.windows("编辑", "/admin/office/edit", "900px", "600px");
     }
     //编辑
     function edit(id) {
-        app.windows("详情", "/admin/user/edit?id="+id, "900px", "550px");
+        app.windows("详情", "/admin/office/edit?id=" + id, "900px", "600px");
     }
 
     //编辑
     function detail(id) {
-        app.windows("详情", "/admin/user/edit?id="+id, "900px", "600px");
+        app.windows("详情", "/admin/office/edit?id=" + id, "900px", "600px");
     }
 
-    /**
-     * 重置
-     */
-    function reset() {
-        $("#formSearch").reset();
-
-    }
+//    function reset() {
+//        $("#formSearch").reset();
+//        $jqGridObj.setGridParam({
+//            postData: undefined
+//        }).trigger("reloadGrid");
+//    }
     $(document).ready(function () {
         //列表初始化
         $jqGridObj = app.list({
-            url: "/admin/user/index",
-            colNames: ["登录名", "姓名", "邮箱", "手机号", "操作"],
+            url: "/admin/office/index",
+            colNames: ["名称", "电话", "邮箱", "启用", "操作"],
             colModel: [{
-                name: "loginName",
-                index: "loginName",
+                name: "name",
+                index: "name",
+                width: 90,
+                formatter: function (cellvalue, options, rowObject) {
+                    return '<a href=\"javascript:void(0)\" onclick=\"detail(\'' + rowObject.id + '\')\">' + cellvalue + '</a>';
+                }
+            }, {
+                name: "phone",
+                index: "phone",
                 width: 60
             }
-                , {
-                    name: "name",
-                    index: "name",
-                    width: 90,
-                    formatter: function (cellvalue, options, rowObject) {
-                        return '<a href=\"javascript:void(0)\" onclick=\"detail(\''+rowObject.id+'\')\">' +cellvalue +'</a>';
-                    }
-                }, {name: "email", index: "email", editable: true, width: 100},
+                ,
                 {
-                    name: "mobile",
-                    index: "mobile"
+                    name: "email",
+                    index: "email"
+                },
+                {
+                    name: "useable",
+                    index: "useable",
+                    width: 30
                 },
                 {
                     name: "id",
                     index: "id",
-                    width: 60,
+                    width: 90,
                     formatter: function (cellvalue, options, rowObject) {
                         return '<span class="center-block text-center">' +
                             '<button  class="btn btn-info btn-xs " onclick="edit(\'' + cellvalue + '\')" type="button" style="margin-right: 5px;margin-left: 5px" ><i class="icon egojit-front icon-edit"></i>&nbsp;修改</button>' +

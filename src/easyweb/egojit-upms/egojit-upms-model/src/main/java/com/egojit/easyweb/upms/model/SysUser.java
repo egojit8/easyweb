@@ -12,7 +12,12 @@ import java.util.List;
 @Table(name = "sys_user")
 public class SysUser extends CurdEndity {
 
-
+    public SysUser(){
+        super();
+    }
+    public SysUser(String id) {
+        super(id);
+    }
 
     /**
      * 归属公司
@@ -91,23 +96,12 @@ public class SysUser extends CurdEndity {
     @Column(name = "login_flag")
     private String loginFlag;
 
-    /**
-     * 创建者
-     */
-    @Column(name = "create_by")
-    private String createBy;
-
-
 
     /**
      * 备注信息
      */
     private String remarks;
 
-    /**
-     * 是否删除
-     */
-    protected String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
 
 
 //    private List<SysRole> roleList= new ArrayList<SysRole>();
@@ -379,23 +373,6 @@ public class SysUser extends CurdEndity {
         this.loginFlag = loginFlag;
     }
 
-    /**
-     * 获取创建者
-     *
-     * @return create_by - 创建者
-     */
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    /**
-     * 设置创建者
-     *
-     * @param createBy 创建者
-     */
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
 
 
 
@@ -427,21 +404,5 @@ public class SysUser extends CurdEndity {
         this.remarks = remarks;
     }
 
-    /**
-     * 获取删除标记
-     *
-     * @return del_flag - 删除标记
-     */
-    public String getDelFlag() {
-        return delFlag;
-    }
 
-    /**
-     * 设置删除标记
-     *
-     * @param delFlag 删除标记
-     */
-    public void setDelFlag(String delFlag) {
-        this.delFlag = delFlag;
-    }
 }
