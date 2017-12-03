@@ -111,7 +111,7 @@
     function del(id) {
         var selectIds = [];
         if (!id || id.length <= 0) {
-            selectIds = $jqGridObj.jqGrid('getGridParam', 'selarrrow');
+            selectIds = $jqGridObj.list.jqGrid('getGridParam', 'selarrrow');
             console.log(selectIds);
         } else {
             selectIds.push(id);
@@ -124,7 +124,7 @@
             app.post("/admin/office/delete", {ids: JSON.stringify(selectIds)}, function (data) {
                 app.close();
                 app.tip("删除成功！");
-                $jqGridObj.trigger("reloadGrid");
+                $jqGridObj.list.trigger("reloadGrid");
             })
         })
     };
@@ -158,9 +158,7 @@
             },
             callback: {
                 onClick: function (event, treeId, treeNode) {
-                    $jqGridObj.setGridParam({
-                        postData:  {"parentId":treeNode.id}
-                    }).trigger("reloadGrid");
+                    $jqGridObj.refresh({"parentId":treeNode.id});
                 }
             }
         };

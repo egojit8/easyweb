@@ -16,6 +16,7 @@
     }
 
     App.prototype = {
+
         serializeNotNull: function (serStr) {
             return serStr.split("&").filter(function (str) {
                 return !str.endsWith("=")
@@ -158,15 +159,19 @@
                 edittext: "Edit",
                 hidegrid: false
             });
-            var oldPostData= $.extend(true, {}, $jqGrid.getGridParam().postData);
+            var op = {}
+            var oldPostData = $.extend(true, op, $jqGrid.getGridParam().postData);
             $("#btnSearch").click(function () {
                 // var postData = app.serializeNotNull($("#formSearch").serialize());
                 console.log(app.getFormJson("#formSearch"));
                 $.each($jqGrid.getGridParam().postData, function (k, v) {
                     delete $jqGrid.getGridParam().postData[k];
                 });
+                var p = $.extend(app.getFormJson("#formSearch"), oldPostData);
+                if (op)
+                    p = $.extend(p, op);
                 $jqGrid.setGridParam({
-                    postData: $.extend(app.getFormJson("#formSearch"), oldPostData)
+                    postData: p
                 }).trigger("reloadGrid");
             });
             $("#btnRest").click(function () {
@@ -176,8 +181,11 @@
                 $.each($jqGrid.getGridParam().postData, function (k, v) {
                     delete $jqGrid.getGridParam().postData[k];
                 });
+                var p = $.extend(app.getFormJson("#formSearch"), oldPostData);
+                if (op)
+                    p = $.extend(p, op);
                 $jqGrid.setGridParam({
-                    postData: $.extend(app.getFormJson("#formSearch"), oldPostData)
+                    postData: p
                 }).trigger("reloadGrid");
             });
 
@@ -194,9 +202,22 @@
                 $("#table_list").setGridHeight($(window).height() - 230);
                 $(window).bind("onresize", this);
             });
-            return $jqGrid;
-        }
-        ,
+
+            var list = {
+                list: $jqGrid,
+                refresh: function (parm) {
+                    op = parm;
+                    var oldPostData = $.extend(true, {}, $jqGrid.getGridParam().postData);
+                    $.each($jqGrid.getGridParam().postData, function (k, v) {
+                        delete $jqGrid.getGridParam().postData[k];
+                    });
+                    $jqGrid.setGridParam({
+                        postData: $.extend(oldPostData, parm)
+                    }).trigger("reloadGrid");
+                }
+            }
+            return list;
+        },
         getRequest: function () {
             var url = location.search; //获取url中"?"符后的字串
             var theRequest = new Object();

@@ -89,7 +89,7 @@
     function del(id){
         var selectIds = [];
         if (!id || id.length <= 0) {
-            selectIds = $jqGridObj.jqGrid('getGridParam', 'selarrrow');
+            selectIds = $jqGridObj.list.jqGrid('getGridParam', 'selarrrow');
             console.log(selectIds);
         } else {
             selectIds.push(id);
@@ -102,7 +102,7 @@
             app.post("/admin/user/delete", {ids: JSON.stringify(selectIds)}, function (data) {
                 app.close();
                 app.tip("删除成功！");
-                $jqGridObj.trigger("reloadGrid");
+                $jqGridObj.list.trigger("reloadGrid");
             })
         })
     };
