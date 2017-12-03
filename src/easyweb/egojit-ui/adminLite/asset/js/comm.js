@@ -116,7 +116,22 @@
                 content: url
             });
         },
-
+        getFormJson: function (form) {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        }
+        ,
         list: function (option) {
             $.jgrid.defaults.styleUI = "Bootstrap";
             var $jqGrid = $("#table_list");
@@ -143,19 +158,27 @@
                 edittext: "Edit",
                 hidegrid: false
             });
+            var oldPostData= $.extend(true, {}, $jqGrid.getGridParam().postData);
             $("#btnSearch").click(function () {
-                var postData = app.serializeNotNull($("#formSearch").serialize());
-                console.log(postData);
+                // var postData = app.serializeNotNull($("#formSearch").serialize());
+                console.log(app.getFormJson("#formSearch"));
+                $.each($jqGrid.getGridParam().postData, function (k, v) {
+                    delete $jqGrid.getGridParam().postData[k];
+                });
                 $jqGrid.setGridParam({
-                    postData: postData
+                    postData: $.extend(app.getFormJson("#formSearch"), oldPostData)
                 }).trigger("reloadGrid");
             });
             $("#btnRest").click(function () {
                 $("#formSearch input").val("");
                 $("#formSearch select").val("");
-                var postData = app.serializeNotNull($("#formSearch").serialize());
-                console.log(postData);
-                $jqGrid.trigger("reloadGrid");
+                console.log(app.getFormJson("#formSearch"));
+                $.each($jqGrid.getGridParam().postData, function (k, v) {
+                    delete $jqGrid.getGridParam().postData[k];
+                });
+                $jqGrid.setGridParam({
+                    postData: $.extend(app.getFormJson("#formSearch"), oldPostData)
+                }).trigger("reloadGrid");
             });
 
 //        $("#table_list_2").jqGrid("navGrid", "#pager_list_2", {
@@ -172,7 +195,8 @@
                 $(window).bind("onresize", this);
             });
             return $jqGrid;
-        },
+        }
+        ,
         getRequest: function () {
             var url = location.search; //获取url中"?"符后的字串
             var theRequest = new Object();
@@ -184,16 +208,17 @@
                 }
             }
             return theRequest;
-        },
+        }
+        ,
         initFormView: function (id, data) {
-            var $elementsTextA = $(id+ " textarea");
+            var $elementsTextA = $(id + " textarea");
             $.each($elementsTextA, function (index, val) {
                 console.log(val);
                 var name = $(val).attr("name");
                 $(val).text(data[name]);
 
             })
-            var $elements = $(id+ " input");
+            var $elements = $(id + " input");
             $.each($elements, function (index, val) {
                 console.log(val);
                 var name = $(val).attr("name");

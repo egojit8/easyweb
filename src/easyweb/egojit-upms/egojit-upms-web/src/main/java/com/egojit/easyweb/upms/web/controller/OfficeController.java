@@ -1,6 +1,8 @@
 package com.egojit.easyweb.upms.web.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.egojit.easyweb.common.base.BaseResult;
 import com.egojit.easyweb.common.base.BaseResultCode;
 import com.egojit.easyweb.common.base.BaseWebController;
@@ -158,4 +160,56 @@ public class OfficeController extends BaseWebController{
         pg = service.selectPageByExample(example, pg);
         return pg;
     }
+
+
+    /**
+     * 获取所有机构列表
+     * @return
+     */
+    @ApiOperation(value = "机构管理-树层级结构接口")
+    @PostMapping("/tree")
+    @ResponseBody
+    public JSONArray tree(SysOffice model) {
+        Example example = new Example(SysOffice.class);
+        Example.Criteria criteria = example.createCriteria();
+        JSONArray list=new JSONArray();
+        if (!StringUtils.isEmpty(model.getName())) {
+            criteria.andLike("name", "%" + model.getName() + "%");
+        }
+
+        if (StringUtils.isEmpty(model.getId())) {
+            criteria.andEqualTo("parentId","0");//获取公司
+        }else {
+            criteria.andEqualTo("parentId",model.getId());
+        }
+        List<SysOffice> midList = service.selectByExample(example);
+        if(midList!=null){
+            for (SysOffice item:midList) {
+                JSONObject  obj=new JSONObject();
+                obj.put("name",item.getName());
+                obj.put("id",item.getId());
+                obj.put("pId",item.getParentId());
+                obj.put("pIds",item.getParentIds());
+                obj.put("isParent",""+isHaveChild(item.getId()));
+                list.add(obj);
+            }
+        }
+        return list;
+    }
+
+
+    /**
+     * 判断是否有子部门
+     * @param id
+     * @return
+     */
+    public boolean isHaveChild(String id){
+        Example example = new Example(SysOffice.class);
+        example.createCriteria().andEqualTo("parentId",id);
+        int count= service.selectCountByExample(example);
+        return  count>0?true:false;
+    }
+
+
+
 }
