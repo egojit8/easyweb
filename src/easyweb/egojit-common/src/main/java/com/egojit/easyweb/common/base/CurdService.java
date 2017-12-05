@@ -68,6 +68,7 @@ public abstract class CurdService<M extends Mapper<T>, T extends CurdEndity> ext
      * @return
      */
     public int updateByPrimaryKeySelective(T model) {
+        model.preUpdate();
         return mapper.updateByPrimaryKeySelective(model);
     }
 
@@ -87,6 +88,7 @@ public abstract class CurdService<M extends Mapper<T>, T extends CurdEndity> ext
      * @return
      */
     public int updateByExample(T model, Object o) {
+        model.preUpdate();
         return mapper.updateByExample(model, o);
     }
     /**
@@ -96,6 +98,7 @@ public abstract class CurdService<M extends Mapper<T>, T extends CurdEndity> ext
      * @return
      */
     public int updateByExampleSelective(T model, Object o) {
+        model.preUpdate();
         return mapper.updateByExampleSelective(model, o);
     }
 

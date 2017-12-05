@@ -61,10 +61,19 @@
                 },
                 success: function (data, textStatus, jqXHR) {
                     if (success) {
-                        if (data && data.code != 200) {
-                            app.tip(data.data)
+                        if (data) {
+                            if (data.code) {
+                                if(data.code==200){
+                                    success(data.data);
+                                }else{
+                                    app.tip(data.data)
+                                }
+                            } else {
+                                success(data);
+                            }
+
                         } else {
-                            success(data.data);
+                            app.tip("未知的错误！")
                         }
                     }
                 },
@@ -247,6 +256,14 @@
 
             })
 
+            var $elementsSelect = $(id + " select");
+            $.each($elementsSelect, function (index, val) {
+                console.log("selcet:===="+val);
+                debugger;
+                var name = $(val).attr("name");
+                var value=data[name];
+                $(val).val(value);
+            })
 
         }
     }
