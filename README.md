@@ -24,7 +24,15 @@ easyweb
 |    ├── egojit-log-micro-service -- 微服务模块
 |    ├── egojit-log-web -- web层管理界面，可以单独跑起来进行分布式部署（端口：9595）
 ```
-
+### 开发部署
+推荐使用[Intellij IDEA](http://www.jetbrains.com/idea/)作为项目开发ide;
+#### 1.创建数据库
+执行doc目录下面的最新 mysql脚本新建数据库
+#### 2.修改数据库配置
+修改每个模块下面web和micro-service子模块的application.yml配置文件中关于数据库连接的配置
+#### 3.用idea导入项目
+用idea导入项目pom文件以project方式打开；直接跑起管理端主模块egojit-web中的EgojitWebApplication;当然别忘记修改这个模块中的application.yml中的数据库
+相关配置；运行完成后就可以打开http://localhost:9494/admin/index
 ### 技术选型
 
 #### 后端技术:
