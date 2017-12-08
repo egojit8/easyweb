@@ -87,7 +87,7 @@ public abstract class BaseEntity implements Serializable {
      */
     public  void preInsert(){
         // 不限制ID为UUID，调用setIsNewRecord()使用自定义ID
-        if (this.isNewRecord){
+        if (this.isNewRecord&&StringUtils.isEmpty(this.id)){
             setId(IdGen.uuid());
         }
         this.createDate = new Date();

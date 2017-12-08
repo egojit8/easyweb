@@ -14,6 +14,7 @@ import com.egojit.easyweb.upm.service.SysUserService;
 import com.egojit.easyweb.upms.common.utils.UserUtils;
 import com.egojit.easyweb.upms.model.SysDict;
 import com.egojit.easyweb.upms.model.SysUser;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,30 +139,32 @@ public class DictController extends BaseWebController {
     @PostMapping("/tree")
     @ResponseBody
     public JSONArray tree(SysDict model) {
-        Example example = new Example(SysDict.class);
-        Example.Criteria criteria = example.createCriteria();
         JSONArray list=new JSONArray();
-        if (!StringUtils.isEmpty(model.getLabel())) {
-            criteria.andLike("label", "%" + model.getLabel() + "%");
-        }
-
-        if (StringUtils.isEmpty(model.getId())) {
-            criteria.andEqualTo("parentId","0");//获取公司
-        }else {
-            criteria.andEqualTo("parentId",model.getId());
-        }
-        List<SysDict> midList = service.selectByExample(example);
+        List<SysDict> midList = service.getDicByParentId(model.getId());
         if(midList!=null){
             for (SysDict item:midList) {
                 JSONObject obj=new JSONObject();
                 obj.put("name",item.getLabel());
-                obj.put("id",item.getId());
+                obj.put("id",item.getValue());
                 obj.put("pId",item.getParentId());
                 obj.put("isParent",""+isHaveChild(item.getId()));
                 list.add(obj);
             }
         }
         return list;
+    }
+
+    /**
+     * 获取所有机构列表
+     * @return
+     */
+    @ApiOperation(value = "字典管理-树层级结构接口")
+    @PostMapping("/get_by_parentid")
+    @ResponseBody
+    public BaseResult getByParentId(SysDict model) {
+        BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
+        result.setData(tree(model));
+        return result;
     }
 
 
