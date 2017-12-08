@@ -1,6 +1,7 @@
 package com.egojit.easyweb.upm.service;
 
 import com.egojit.easyweb.common.base.BaseService;
+import com.egojit.easyweb.common.base.CurdService;
 import com.egojit.easyweb.upms.dao.mapper.SysRoleMapper;
 import com.egojit.easyweb.upms.dao.mapper.SysUserMapper;
 import com.egojit.easyweb.upms.model.SysRole;
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by egojit on 2017/11/23.
  */
 @Service
-public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
+public class SysRoleService extends CurdService<SysRoleMapper, SysRole> {
 
 
     /**

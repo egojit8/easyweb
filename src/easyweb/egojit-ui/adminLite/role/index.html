@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>角色管理</title>
+    <meta name="keywords" content="角色管理">
+    <meta name="description" content="角色管理">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet"/>
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css"
+          rel="stylesheet"/>
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../asset/css/style.min862f.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/css/zTreeStyle/zTreeStyle.css'"
+          href="../asset/js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+
+</head>
+
+<body class="gray-bg">
+<div class="row animated fadeInRight">
+    <div class="col-sm-2" style="padding-left: 0px;padding-right: 0px; overflow-x: scroll;height: 100%">
+        <div class="ibox">
+            <div class="ibox-title">部门</div>
+            <div class="ibox-content">
+                <ul id="tree" class="ztree"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-10" style="padding-left: 5px">
+        <div class="ibox ">
+            <div class="ibox-title ">
+                <div class="row">
+                    <form class="form-inline" id="formSearch">
+
+                        <div class="col-sm-8 form-group">
+                            <label style="width: 60px">名称</label>
+                            <input type="text" name="name" placeholder="请输入名称" class="form-control">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <button id="btnRest" class="btn btn-primary btn-xs skin_blue_buttom"
+                                    style="float: right; margin-left: 10px" type="button"><i
+                                    class="icon egojit-front icon-add"></i>&nbsp;重置
+                            </button>
+                            <button id="btnSearch" class="btn btn-warning btn-xs" type="button"
+                                    style="float: right;"><i class="icon egojit-front icon-search"></i>&nbsp;搜索
+                            </button>
+
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+            <div class="ibox-content" style="padding-top: 10px">
+                <div class="row" style="margin-bottom: 10px">
+                    <button id="btnDelete" onclick="del()" class="btn btn-primary btn_no_radius btn-xs "
+                            type="button"><i
+                            class="icon egojit-front icon-delete"></i>&nbsp;删除
+                    </button>
+                    <button id="btnAdd" onclick="add()" class="btn btn-primary btn_no_radius btn-xs " type="button">
+                        <i
+                                class="icon egojit-front icon-add"></i>&nbsp;添加
+                    </button>
+                </div>
+                <div class="jqGrid_wrapper">
+                    <table id="table_list"></table>
+                    <div id="pager_list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/peity/jquery.peity.min.js'"
+        src="../asset/js/plugins/peity/jquery.peity.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/i18n/grid.locale-cnffe4.js'"
+        src="../asset/js/plugins/jqgrid/i18n/grid.locale-cnffe4.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/jquery.jqGrid.minffe4.js'"
+        src="../asset/js/plugins/jqgrid/jquery.jqGrid.minffe4.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../asset/js/plugins/layer/layer.js"></script>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/js/jquery.ztree.core.min.js'"
+        src="../asset/js/ztree/js/jquery.ztree.core.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/js/jquery.ztree.excheck.min.js'"
+        src="../asset/js/ztree/js/jquery.ztree.excheck.min.js"></script>
+
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+
+
+<!--<script src="js/content.min.js?v=1.0.0"></script>-->
+<script type="text/javascript">
+    var $jqGridObj;
+    var office=undefined;
+    //删除
+    function del(id) {
+        var selectIds = [];
+        if (!id || id.length <= 0) {
+            selectIds = $jqGridObj.list.jqGrid('getGridParam', 'selarrrow');
+            console.log(selectIds);
+        } else {
+            selectIds.push(id);
+        }
+        if (selectIds == null || selectIds.length < 1) {
+            app.tip("请选择数据!");
+            return;
+        }
+        app.confirm("确定删除该数据？", function () {
+            app.post("/admin/role/delete", {ids: JSON.stringify(selectIds)}, function (data) {
+                app.close();
+                app.tip("删除成功！");
+                $jqGridObj.list.trigger("reloadGrid");
+            })
+        })
+    };
+    //新增
+    function add() {
+        if(!office){
+            app.tip("请选择部门");
+            return;
+        }
+        app.windows("编辑", "/admin/role/edit?officeId="+office.id+"&officeName="+office.name, "900px", "600px");
+    }
+    //编辑
+    function edit(id) {
+        app.windows("详情", "/admin/role/edit?id=" + id, "900px", "600px");
+    }
+
+    //编辑
+    function detail(id) {
+        app.windows("详情", "/admin/role/edit?id=" + id, "900px", "600px");
+    }
+
+    $(document).ready(function () {
+
+        //列表初始化
+        $jqGridObj = app.list({
+            url: "/admin/role/index",
+            colNames: ["名称", "英文名", "启用", "操作"],
+            colModel: [{
+                name: "name",
+                index: "name",
+                width: 90,
+                formatter: function (cellvalue, options, rowObject) {
+                    return '<a href=\"javascript:void(0)\" onclick=\"detail(\'' + rowObject.id + '\')\">' + cellvalue + '</a>';
+                }
+            }, {
+                name: "enname",
+                index: "enname"
+            }
+                ,
+                {
+                    name: "useable",
+                    index: "useable",
+                    width: 30,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return cellvalue=="1"?"启用":"停用"
+                    }
+                },
+                {
+                    name: "id",
+                    index: "id",
+                    width: 90,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return '<span class="center-block text-center">' +
+                            '<button  class="btn btn-info btn-xs " onclick="edit(\'' + cellvalue + '\')" type="button" style="margin-right: 5px;margin-left: 5px" ><i class="icon egojit-front icon-edit"></i>&nbsp;修改</button>' +
+                            '<button id="btnDetail" onclick="del(\'' + cellvalue + '\')"  class="btn btn-default btn-xs" type="button" style="margin-right: 5px;margin-left: 5px"><i class="icon egojit-front icon-delete"></i>&nbsp;删除</button>' +
+                            '</span>';
+                    }
+                }
+            ]
+        });
+        //初始化树结构
+        var setting = {
+            async: {
+                enable: true,
+                url: "/admin/office/tree",
+                autoParam: ["id"]
+            },
+            view: {
+                showLine: true
+            },
+            check: {
+                enable: true
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    $jqGridObj.refresh({"officeId": treeNode.id});
+                    office=treeNode;
+                }
+                ,
+                onAsyncSuccess: function (event, treeId, treeNode, msg) {
+                    var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                    var nodes = treeObj.getNodes();
+                    if (nodes && nodes.length > 0) {
+                        treeObj.selectNode(nodes[0]);
+                        $jqGridObj.refresh({"officeId": nodes[0].id});
+                    }
+                }
+            }
+        };
+        zTreeObj = $.fn.zTree.init($("#tree"), setting);
+
+
+    });
+</script>
+</body>
+</html>
