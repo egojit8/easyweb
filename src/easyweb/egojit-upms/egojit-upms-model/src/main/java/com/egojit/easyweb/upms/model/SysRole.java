@@ -49,13 +49,6 @@ public class SysRole extends CurdEndity {
      */
     private String useable;
 
-    /**
-     * 创建者
-     */
-    @Column(name = "create_by")
-    private String createBy;
-
-
 
 
 

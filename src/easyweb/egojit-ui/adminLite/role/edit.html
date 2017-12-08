@@ -45,35 +45,41 @@
         </div>
         <div class="row ibox-content">
             <form class="form-horizontal m-t" id="formSubmit">
-                <div class="col-sm-2">
-                    <ul id="tree" class="ztree"></ul>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">所属机构/部门：</label>
+                    <div class="col-sm-10">
+                        <input type="hidden" name="id" id="id"/>
+                        <input type="hidden" name="officeId" id="officeId"/>
+                        <label class="form-control" id="officeName"></label>
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
+                    </div>
                 </div>
-                <div class="col-sm-10">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">账号：</label>
-                        <div class="col-sm-4">
-                            <input id="loginName" name="loginName" class="form-control" type="text">
-                            <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
-                        </div>
-                        <label class="col-sm-2 control-label">密码：</label>
-                        <div class="col-sm-4">
-                            <input id="password" name="password" class="form-control" type="text">
-                            <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入工号</span>-->
-                        </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">名称：</label>
+                    <div class="col-sm-4">
+                        <input id="name" name="name" class="form-control" type="text">
                     </div>
-
-                    <div class="form-group">
-
-                        <label class="col-sm-2 control-label">是否管理员：</label>
-                        <div class="col-sm-10">
-                            <label><input type="checkbox" class="checkbox" id="userType" name="userType"
-                                          value="1">管理员</label>
-                        </div>
+                    <label class="col-sm-2 control-label">英文名称：</label>
+                    <div class="col-sm-4">
+                        <input id="enname" name="enname" class="form-control" type="text">
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-8 col-sm-offset-3">
-                            <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
-                        </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label class="col-sm-2 control-label">是否系统角色：</label>
+                    <div class="col-sm-4">
+                        <!--<label><input type="checkbox" class="checkbox" id="userType" name="userType"-->
+                                      <!--value="1">管理员</label>-->
+                        <select class="form-control m-b" id="isSys" name="isSys">
+                            <option value="1">是</option>
+                            <option value="0" selected="selected">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-3">
+                        <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
                     </div>
                 </div>
             </form>
@@ -98,97 +104,35 @@
 
 <script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
 <script type="text/javascript">
-    //初始化机构
-    function getOffice(pid) {
-        app.post("/admin/office/list", {parentId: pid}, function (data) {
-            if (data && data.length > 0) {
-                var html = '<select class="form-control m-b" style="width: 150px; float: left;" name="officeIds"  id="officeId' + pid + '">' +
-                    '<option value="">请选择机构</option>';
-                $.each(data, function (index, item) {
-//                        $('#companyId').append('<option optType="'+item.type+'" value="'+item.id+'">'+item.name+'</option>');
-                    html += '<option optType="' + item.type + '" value="' + item.id + '">' + item.name + '</option>';
-                });
-                html += '</select>';
-                $("#divOffice").append(html);
-                if (pid != "0") {
-                    $('#officeId' + pid).css("margin-left", "10px")
-                }
-                /**
-                 * 选择事件
-                 */
-                $('#officeId' + pid).change(function (val) {
-                    var $select = $(this).children('option:selected');//这就是selected的值
-                    $(this).nextAll().remove();
-                    var t = $select.attr("optType");
-                    if (t == 1) {//表示公司
-                        $("#companyId").val($select.val());
-                        getOffice($select.val());
-                    } else {//角色
-                        $("#officeId").val($select.val());
-                    }
-
-                });
-
-            }
-
-        });
+    var zTreeObj=undefined;
+    function initView() {
+        var request=app.getRequest();
+        $("#officeName").text(request["officeName"]);
+        $("#officeId").val(request["officeId"]);
+        getDetail();
+        //初始化左机构
+        //获取资源类别
+//        getType();
     }
-
-    //渲染界面
+    //渲染界面编辑数据
     function initFormView(data) {
-        getOffice(data.companyId);
         app.initFormView("#formSubmit", data);
+        $("#officeName").text(data.officeName);
     }
 
     //获取数据
-    function initView() {
+    function getDetail() {
         var id = app.getRequest()["id"];
         if (id && id.length > 0) {//编辑
-            app.post("/admin/user/detail", {id: id}, function (data) {
+            app.post("/admin/role/detail", {id: id}, function (data) {
                 initFormView(data);
             });
-        } else {//新增
-            getOffice("0");
         }
 
     }
 
-
-    function initOffice() {
-        //初始化树结构
-        var setting = {
-            async: {
-                enable: true,
-                url: "/admin/office/tree",
-                autoParam: ["id"]
-            },
-            view: {
-                showLine: true
-            },
-            check: {
-                enable: true
-
-            },
-            callback: {
-                onClick: function (event, treeId, treeNode) {
-//                    $jqGridObj.refresh({"officeId": treeNode.id});
-//                    office=treeNode;
-                }
-                ,
-                onAsyncSuccess: function (event, treeId, treeNode, msg) {
-//                    var treeObj = $.fn.zTree.getZTreeObj(treeId);
-//                    var nodes = treeObj.getNodes();
-//                    if (nodes && nodes.length > 0) {
-//                        treeObj.selectNode(nodes[0]);
-//                        $jqGridObj.refresh({"officeId": nodes[0].id});
-//                    }
-                }
-            }
-        };
-        zTreeObj = $.fn.zTree.init($("#tree"), setting);
-    }
-
     $().ready(function () {
+        //渲染界面
         initView();
         $.validator.setDefaults({
             highlight: function (e) {
@@ -203,21 +147,16 @@
         var formValidate = {
             rules: {
                 name: "required",
-                mobile: "required",
-                companyId: "required",
-                officeId: "required"
+                enname: "required"
             },
             messages: {
-                name: e + "请输入姓名",
-                mobile: e + "请输入手机号",
-                companyId: e + "请输选择公司",
-                officeId: e + "请输选择角色"
+                name: e + "请输入名称",
+                enname: e + "请输入英文名"
             },
             debug: true,
             submitHandler: function (form) {
                 var parm = $("#formSubmit").serialize();
-                console.log(parm);
-                app.post("/admin/user/edit", parm, function (data) {
+                app.post("/admin/role/edit", parm, function (data) {
                     app.close();
                     var grid = window.parent.location.reload(); //刷新父页面
                 });

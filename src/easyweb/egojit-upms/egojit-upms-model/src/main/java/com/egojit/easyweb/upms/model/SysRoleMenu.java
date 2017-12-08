@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "sys_role_menu")
-public class SysRoleMenu extends BaseEntity {
+public class SysRoleMenu {
     /**
      * 角色编号
      */

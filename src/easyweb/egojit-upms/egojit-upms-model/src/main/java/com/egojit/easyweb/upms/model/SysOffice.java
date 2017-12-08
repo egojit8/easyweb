@@ -10,7 +10,12 @@ import java.util.Date;
 @Table(name = "sys_office")
 public class SysOffice extends CurdEndity {
 
-
+    public SysOffice(){
+        super();
+    }
+    public SysOffice(String id) {
+        super(id);
+    }
     /**
      * 父级编号
      */

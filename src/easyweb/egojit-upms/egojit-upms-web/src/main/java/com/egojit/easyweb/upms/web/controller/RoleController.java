@@ -9,9 +9,11 @@ import com.egojit.easyweb.common.base.BaseWebController;
 import com.egojit.easyweb.common.base.Page;
 import com.egojit.easyweb.common.utils.MD5Util;
 import com.egojit.easyweb.common.utils.StringUtils;
+import com.egojit.easyweb.upm.service.SysOfficeService;
 import com.egojit.easyweb.upm.service.SysRoleService;
 import com.egojit.easyweb.upm.service.SysRoleService;
 import com.egojit.easyweb.upms.common.utils.UserUtils;
+import com.egojit.easyweb.upms.model.SysOffice;
 import com.egojit.easyweb.upms.model.SysRole;
 import com.egojit.easyweb.upms.model.SysUser;
 import io.swagger.annotations.Api;
@@ -39,7 +41,8 @@ public class RoleController extends BaseWebController {
 
     @Autowired
     private SysRoleService service;
-
+    @Autowired
+    private SysOfficeService officeService;
     @RequestMapping("/index")
     @ApiOperation(value = "角色管理首页")
     public String index(){
@@ -110,63 +113,52 @@ public class RoleController extends BaseWebController {
     public BaseResult detail(String id){
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
         SysRole model=  service.selectByPrimaryKey(id);
-        result.setData(model);
+        JSONObject object=(JSONObject) JSON.toJSON(model);
+        List<SysOffice> list= officeService.getAllParents(new SysOffice(model.getOfficeId()));
+        String name=getOfficeNames(list,new SysOffice(model.getOfficeId()));
+        if(StringUtils.isNotEmpty(name)){
+            name=name.substring(1,name.length());
+        }
+        object.put("officeName",name);
+        result.setData(object);
         return result;
     }
 
 
+    /**
+     * 获取所属机构的名称，拼接好的
+     * @param list
+     * @param office
+     * @return
+     */
+    private String getOfficeNames(List<SysOffice> list,SysOffice office)
+    {
+        String names="";
+        if(list!=null) {
+            for (SysOffice o : list) {
+                if (o.getId().equals(office.getId())) {
+                    names = getOfficeNames(list, new SysOffice(o.getParentId())) + "," + o.getName();
+                }
+            }
+        }
+        return names;
+    }
 
 
+    @RequestMapping("/power")
+    @ApiOperation(value = "角色管理-权限设置界面")
+    public String power(){
+        return "/role/power";
+    }
 
-
-
-
-//    /**
-//     * 获取所有机构列表
-//     * @return
-//     */
-//    @ApiOperation(value = "角色管理-树层级结构接口")
-//    @PostMapping("/tree")
-//    @ResponseBody
-//    public JSONArray tree(SysRole model) {
-//        Example example = new Example(SysRole.class);
-//        Example.Criteria criteria = example.createCriteria();
-//        JSONArray list=new JSONArray();
-//        if (!StringUtils.isEmpty(model.getLabel())) {
-//            criteria.andLike("label", "%" + model.getLabel() + "%");
-//        }
-//
-//        if (StringUtils.isEmpty(model.getId())) {
-//            criteria.andEqualTo("parentId","0");//获取公司
-//        }else {
-//            criteria.andEqualTo("parentId",model.getId());
-//        }
-//        List<SysRole> midList = service.selectByExample(example);
-//        if(midList!=null){
-//            for (SysRole item:midList) {
-//                JSONObject obj=new JSONObject();
-//                obj.put("name",item.getLabel());
-//                obj.put("id",item.getId());
-//                obj.put("pId",item.getParentId());
-//                obj.put("isParent",""+isHaveChild(item.getId()));
-//                list.add(obj);
-//            }
-//        }
-//        return list;
-//    }
-//
-//
-//    /**
-//     * 判断是否有子角色
-//     * @param id
-//     * @return
-//     */
-//    public boolean isHaveChild(String id){
-//        Example example = new Example(SysRole.class);
-//        example.createCriteria().andEqualTo("parentId",id);
-//        int count= service.selectCountByExample(example);
-//        return  count>0?true:false;
-//    }
+    @ApiOperation(value = "角色管理-权限设置接口")
+    @PostMapping("/power")
+    @ResponseBody
+    public BaseResult power(String roleId,String menusIds){
+        BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
+        service.setPower(roleId,menusIds);
+        return result;
+    }
 
 
 }
