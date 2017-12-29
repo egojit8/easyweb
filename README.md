@@ -1,7 +1,7 @@
 # easyweb
 ## 关注【千里授渔】微信公众号
-#### 公众号分享各种IT教学视频，资源丰富
-![公众号](doc/截图/qlshouyu.png)
+#### 关注公众号【千里授渔】分享各种IT教学视频，资源丰富
+![千里授渔](doc/截图/qlshouyu.jpg)
 项目代码正在逐步完善中……
 # 系统部分截图
 ![用户管理](doc/截图/用户管理.png)
@@ -64,4 +64,4 @@ Maven | 项目构建管理  | [http://maven.apache.org/](http://maven.apache.org
 # Hello World
 ## 有钱的打赏个硬币
 #### 有钱的打赏个硬币多少都接着
-![微信](doc/截图/微信收钱码lite.png)                     ![微信](doc/截图/支付宝收钱码lite.png)
+![微信](doc/截图/微信收钱码lite.png)![支付宝](doc/截图/支付宝收钱码lite.png)
