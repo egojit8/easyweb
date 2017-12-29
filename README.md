@@ -61,7 +61,7 @@ Maven | 项目构建管理  | [http://maven.apache.org/](http://maven.apache.org
 # Hello World
 ## 关注【千里授渔】微信公众号
 #### 公众号分享各种IT教学视频，资源丰富
-<div style="align: center">![公众号](doc/截图/qlshouyu.png)</div>
+![公众号](doc/截图/qlshouyu.png)
 ## 有钱的打赏个硬币
 #### 有钱的打赏个硬币多少都接着
 ![微信](doc/截图/微信收钱码lite.png)                     ![微信](doc/截图/支付宝收钱码lite.png)
