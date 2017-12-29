@@ -61,6 +61,7 @@ public class SysMenuService extends CurdService<SysMenuMapper, SysMenu> {
      */
     public boolean isHaveChild(String id){
         Example example = new Example(SysMenu.class);
+
         example.createCriteria().andEqualTo("parentId",id);
         int count= mapper.selectCountByExample(example);
         return  count>0?true:false;

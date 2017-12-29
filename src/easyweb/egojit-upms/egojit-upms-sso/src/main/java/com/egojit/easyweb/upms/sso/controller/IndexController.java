@@ -40,12 +40,6 @@ public class IndexController extends BaseWebController {
         return "redirect:/admin/index";
     }
 
-    @RequestMapping("/mm")
-    @ResponseBody
-    public Object test() {
-       return userService.selectByPrimaryKey("1");
-    }
-
     @ResponseBody
     @RequestMapping("/menus")
     @ApiOperation(value = "菜单接口")

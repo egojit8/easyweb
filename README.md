@@ -58,3 +58,11 @@ Log4J | 日志组件  | [http://logging.apache.org/log4j/1.2/](http://logging.ap
 Swagger2 | 接口测试框架  | [http://swagger.io/](http://swagger.io/)
 Maven | 项目构建管理  | [http://maven.apache.org/](http://maven.apache.org/)
 
+# Hello World
+## 关注【千里授渔】微信公众号
+分享各种IT教学视频
+![公众号](doc/截图/微信二维码.png)
+## 有钱的打赏个硬币
+有钱的打赏个硬币多少都接着
+![微信](doc/截图/微信收钱码lite.png)
+![微信](doc/截图/支付宝收钱码lite.png)

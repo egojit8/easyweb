@@ -32,7 +32,7 @@ public class SysDictService extends CurdService<SysDictMapper, SysDict> {
         model.setUpdateBy(user.getId());
         if (StringUtils.isEmpty(model.getId())) {
             model.setCreateBy(user.getId());
-            model.setId(model.getLabel());
+            model.setId(model.getValue());
             if (mapper.existsWithPrimaryKey(model)) {
                 result = "该字典值已经存在！";
             } else {
@@ -61,6 +61,8 @@ public class SysDictService extends CurdService<SysDictMapper, SysDict> {
     public List<SysDict> getDicByParentId(String parentId) {
         Example example = new Example(SysDict.class);
         Example.Criteria criteria = example.createCriteria();
+        if(parentId==null)
+            parentId="0";
         criteria.andEqualTo("parentId",parentId);
         return mapper.selectByExample(example);
     }
