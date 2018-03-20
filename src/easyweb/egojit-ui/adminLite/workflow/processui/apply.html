@@ -1,0 +1,186 @@
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>流程部署</title>
+    <meta name="keywords" content="流程部署">
+    <meta name="description" content="流程部署">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../../asset/css/animate.min.css"
+          rel="stylesheet">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/font-awesome.min.css'" rel="stylesheet"
+          href="../../asset/css/font-awesome.min.css"/>
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../../asset/css/style.min862f.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/webuploader/webuploader.css'" href="../../asset/js/webuploader/webuploader.css" >
+
+
+
+</head>
+
+<body class="gray-bg">
+<form class="form-horizontal m-t" id="formSubmit">
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox ">
+            <div class="ibox-title">
+                申请
+            </div>
+            <div class="ibox-content">
+
+                <p th:utext="${renderedTaskForm}">conten</p>
+                <input type="hidden" id="taskId" name="taskId" th:value="*{taskId}">
+                <input type="hidden" id="processInstanceId" name="processInstanceId" th:value="*{processInstanceId}">
+            </div>
+        </div>
+        <div class="ibox float-e-margins">
+            <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-3">
+                    <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</form>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/jquery.validate.min.js'"
+        src="../../asset/js/plugins/validate/jquery.validate.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/messages_zh.min.js'"
+        src="../../asset/js/plugins/validate/messages_zh.min.js"></script>
+<!--<script src="js/demo/form-validate-demo.min.js"></script>-->
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/webuploader/webuploader.js'" src="../../asset/js/webuploader/webuploader.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../../asset/js/comm.js"></script>
+<script type="text/javascript">
+
+
+    //渲染界面
+    function  initFormView(data) {
+        // getOffice(data.companyId);
+        app.initFormView("#formSubmit",data);
+    }
+
+    //获取数据
+    function initView() {
+        var id=app.getRequest()["id"];
+        if(id&&id.length>0){//编辑
+            app.post("/admin/workflow/process/detail",{id:id},function (data) {
+                initFormView(data);
+            });
+        }else{//新增
+            // getOffice("0");
+        }
+
+    }
+
+
+    $().ready(function () {
+        var uploader = WebUploader.create({
+
+            // swf文件路径
+            swf: '${@viewConfig.getRemoteViewUrl()}asset/js/webuploader/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '/admin/workflow/process/processfile',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#picker',
+            auto: true,
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false
+        });
+        // var $list=$("#thelist");
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on( 'uploadProgress', function( file, percentage ) {
+            var $li = $( '#'+file.id ),
+                $percent = $li.find('.progress .progress-bar');
+
+            // 避免重复创建
+            if ( !$percent.length ) {
+                $percent = $('<div class="progress progress-striped active">' +
+                    '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+                    '</div>' +
+                    '</div>').appendTo( $li ).find('.progress-bar');
+            }
+            $li.find('p.state').text('上传中');
+            $percent.css( 'width', percentage * 100 + '%' );
+        });
+        uploader.on( 'uploadSuccess', function( file ) {
+            console.log(file);
+            $("#resourceName").val(file.name);
+            $( '#'+file.id ).find('p.state').text('已上传');
+        });
+
+        uploader.on( 'uploadError', function( file ) {
+            $( '#'+file.id ).find('p.state').text('上传出错');
+        });
+
+        uploader.on( 'uploadComplete', function( file ) {
+            $( '#'+file.id ).find('.progress').fadeOut();
+        });
+        initView();
+
+
+
+        $.validator.setDefaults({
+            highlight: function (e) {
+                $(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+            }, success: function (e) {
+                e.closest(".form-group").removeClass("has-error").addClass("has-success")
+            }, errorElement: "span", errorPlacement: function (e, r) {
+                e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+            }, errorClass: "help-block m-b-none", validClass: "help-block m-b-none"
+        })
+        var e = "<i class='fa fa-times-circle'></i> ";
+        var formValidate = {
+            rules: {
+                // name: "required"
+                // mobile: "required",
+                // companyId:"required",
+                // officeId: "required"
+            },
+            messages: {
+                // name: e + "请输入流程名称",
+                // mobile: e + "请输入手机号",
+                // companyId: e + "请输选择公司",
+                // officeId: e + "请输选择部门"
+            },
+            debug: true,
+            submitHandler: function (form) {
+                var parm=$("#formSubmit").serialize();
+                console.log(parm);
+                app.post("/workflow/processui/task/complete/"+$("#taskId").val()+"/"+$("#processInstanceId").val(), parm, function (data) {
+                    // app.close();
+                    // var grid = window.parent.location.reload(); //刷新父页面
+                    location.href=data;
+                });
+            }
+        };
+        $("#formSubmit").validate(formValidate);
+    });
+</script>
+</body>
+</html>

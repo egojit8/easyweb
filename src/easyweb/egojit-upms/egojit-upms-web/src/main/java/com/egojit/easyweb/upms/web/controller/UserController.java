@@ -106,4 +106,19 @@ public class UserController extends BaseWebController {
         result.setData(model);
         return result;
     }
+
+    @RequestMapping("/power")
+    @ApiOperation(value = "用户管理-权限设置界面")
+    public String power(){
+        return "/user/power";
+    }
+
+    @ApiOperation(value = "用户管理-权限设置接口")
+    @PostMapping("/power")
+    @ResponseBody
+    public BaseResult power(String roleId,String menusIds){
+        BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
+//        service.setPower(roleId,menusIds);
+        return result;
+    }
 }

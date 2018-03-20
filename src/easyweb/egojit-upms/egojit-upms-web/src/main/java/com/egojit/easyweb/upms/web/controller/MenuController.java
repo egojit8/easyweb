@@ -69,6 +69,7 @@ public class MenuController  extends BaseWebController{
         if(StringUtils.isEmpty(model.getId())){
             model.setCreateBy(curentUser.getId());
             model.setUpdateBy(curentUser.getId());
+            model.setIsShow("1");
             service.insert(model);
         }else {
             model.setUpdateBy(curentUser.getId());

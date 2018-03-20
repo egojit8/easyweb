@@ -9,10 +9,13 @@ import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.ErrorPage;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConverter;
+
+import javax.servlet.MultipartConfigElement;
 
 /**
  * Created by egojit on 2017/11/24.
@@ -45,5 +48,18 @@ public class WebConfig {
         fastConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fastConverter;
         return new HttpMessageConverters(converter);
+    }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        // 设置文件大小限制 ,超出设置页面会抛出异常信息，
+        // 这样在文件上传的地方就需要进行异常信息的处理了;
+        factory.setMaxFileSize("1024KB"); // KB,MB
+        /// 设置总上传数据总大小
+        factory.setMaxRequestSize("2048KB");
+        // Sets the directory location where files will be stored.
+        // factory.setLocation("路径地址");
+        return factory.createMultipartConfig();
     }
 }

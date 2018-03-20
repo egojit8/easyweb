@@ -60,6 +60,9 @@
                 <button id="btnAdd" onclick="add()" class="btn btn-primary btn_no_radius btn-xs " type="button"><i
                         class="icon egojit-front icon-add"></i>&nbsp;添加
                 </button>
+                <button id="btnPower" onclick="power()" class="btn btn-primary btn_no_radius btn-xs " type="button"><i
+                        class="icon egojit-front icon-power"></i>&nbsp;权限设置
+                </button>
             </div>
             <div class="jqGrid_wrapper">
                 <table id="table_list"></table>
@@ -110,6 +113,12 @@
     function add() {
         app.windows("编辑", "/admin/user/edit", "900px", "550px");
     }
+
+    //权限设置
+    function power(){
+        app.windows("编辑", "/admin/user/power", "900px", "550px");
+    }
+
     //编辑
     function edit(id) {
         app.windows("详情", "/admin/user/edit?id="+id, "900px", "550px");

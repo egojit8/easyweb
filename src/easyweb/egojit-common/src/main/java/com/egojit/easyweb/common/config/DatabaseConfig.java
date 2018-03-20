@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by egojit on 2017/10/17.
  */
-@Component
+@Component("mysqlDatabaseConfig")
 @ConfigurationProperties(prefix = "spring.datasource")
 public class DatabaseConfig {
     private String url;

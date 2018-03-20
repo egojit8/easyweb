@@ -21,6 +21,7 @@
         <module>egojit-log</module>
         <module>egojit-common</module>
         <module>egojit-web</module>
+        <module>egojit-workflow</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,6 +47,9 @@
         <spring.version>4.3.7.RELEASE</spring.version>
         <swagger.version>2.4.0</swagger.version>
         <fastjson.version>1.2.28</fastjson.version>
+        <activiti.boot.version>6.0.0</activiti.boot.version>
+        <activiti.version>6.0.0</activiti.version>
+        <activiti.modeler.version>5.22.0</activiti.modeler.version>
     </properties>
 
 
@@ -60,6 +64,11 @@
             <!--<artifactId>spring-boot-starter-logging</artifactId>-->
             <!--</exclusion>-->
             <!--</exclusions>-->
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -127,11 +136,11 @@
             <artifactId>jedis</artifactId>
             <version>${redis.client.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.ulisesbocchio</groupId>
-            <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>${ulisesbocchio.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.github.ulisesbocchio</groupId>-->
+            <!--<artifactId>jasypt-spring-boot-starter</artifactId>-->
+            <!--<version>${ulisesbocchio.version}</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-core</artifactId>

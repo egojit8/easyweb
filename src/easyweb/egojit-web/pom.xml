@@ -40,6 +40,11 @@
             <artifactId>egojit-log-web</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.egojit.easyweb</groupId>
+            <artifactId>egojit-workflow-web</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 
