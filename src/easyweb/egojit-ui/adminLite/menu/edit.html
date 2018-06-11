@@ -84,8 +84,8 @@
                         <label class="col-sm-2 control-label">是否显示：</label>
                         <div class="col-sm-4">
                             <select class="form-control m-b" id="isShow" name="isShow">
-                                <option value="0" selected="selected">是</option>
-                                <option value="1">否</option>
+                                <option value="1" selected="selected">是</option>
+                                <option value="0">否</option>
                             </select>
                         </div>
                     </div>
@@ -146,18 +146,18 @@
 
     var zTreeObj=undefined;
     function initView() {
-        //初始化左侧菜单
-        initmenu();
-        //获取资源类别
+
+        //字典初始化
         getType();
+
     }
     //初始化上级字典
     function getType() {
-        app.post("/admin/dict/get_by_parentid", {'id':'menu_type'}, function (data) {
+        app.post("/admin/dict/get_by_parentid", {'pValue':'menu_type'}, function (data) {
             if (data && data.length > 0) {
                 var html = '';
                 $.each(data, function (index, item) {
-                    html += '<option value="' + item.id + '">' + item.name + '</option>';
+                    html += '<option value="' + item.value + '">' + item.label + '</option>';
                 });
                 $("#type").append(html);
             }
@@ -175,8 +175,10 @@
         if (id && id.length > 0) {//编辑
             app.post("/admin/menu/detail", {id: id}, function (data) {
                 initFormView(data);
-                zTreeObj.checkNode(zTreeObj.getNodeByTId(data.parentId), true, false);
+                initmenu(data.parentId);
             });
+        }else {
+            initmenu();
         }
 
     }
@@ -192,12 +194,12 @@
     }
     
     //初始化左侧菜单
-    function initmenu() {
+    function initmenu(ckId) {
         //初始化树结构
         var setting = {
             async: {
                 enable: true,
-                url: "/admin/menu/alltree",
+                url: "/admin/menu/treeAndCheck?ckId="+ckId,
                 autoParam: ["id"]
             },
             check: {
@@ -211,20 +213,15 @@
             callback: {
                 onCheck: function (event, treeId, treeNode) {
                     $("#parentId").val(treeNode.id);
-                    var ids="0"+getMenusIdsStr(treeNode);
-                    $("#parentIds").val(treeNode.id);
+                    var ids="0"+getMenusIdsStr(treeNode)+","+treeNode.id;
+                    $("#parentIds").val(ids);
                     console.log(ids);
                 }
-//                onClick: function (event, treeId, treeNode) {
-//                    $("#parentId").val(treeNode.id);
-//                    var ids="0"+getMenusIdsStr(treeNode);
-//                    $("#parentIds").val(treeNode.id);
-//                    console.log(ids);
-//                }
                 ,
                 onAsyncSuccess: function (event, treeId, treeNode, msg) {
                     var treeObj = $.fn.zTree.getZTreeObj(treeId);
                     treeObj.expandAll(true);
+
                 }
             }
         };

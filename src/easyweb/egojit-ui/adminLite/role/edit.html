@@ -66,11 +66,19 @@
                 </div>
 
                 <div class="form-group">
-
+                    <label class="col-sm-2 control-label">是否启用：</label>
+                    <div class="col-sm-4">
+                        <!--<label><input type="checkbox" class="checkbox" id="userType" name="userType"-->
+                        <!--value="1">管理员</label>-->
+                        <select class="form-control m-b" id="useable" name="useable">
+                            <option value="1" selected="selected">启用</option>
+                            <option value="0">停用</option>
+                        </select>
+                    </div>
                     <label class="col-sm-2 control-label">是否系统角色：</label>
                     <div class="col-sm-4">
                         <!--<label><input type="checkbox" class="checkbox" id="userType" name="userType"-->
-                                      <!--value="1">管理员</label>-->
+                        <!--value="1">管理员</label>-->
                         <select class="form-control m-b" id="isSys" name="isSys">
                             <option value="1">是</option>
                             <option value="0" selected="selected">否</option>

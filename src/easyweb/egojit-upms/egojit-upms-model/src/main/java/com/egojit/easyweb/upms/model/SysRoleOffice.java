@@ -1,13 +1,13 @@
 package com.egojit.easyweb.upms.model;
 
-import com.egojit.easyweb.common.base.BaseEntity;
+import com.egojit.easyweb.common.base.Entity.BaseDbEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "sys_role_office")
-public class SysRoleOffice extends BaseEntity {
+public class SysRoleOffice extends BaseDbEntity {
     /**
      * 角色编号
      */

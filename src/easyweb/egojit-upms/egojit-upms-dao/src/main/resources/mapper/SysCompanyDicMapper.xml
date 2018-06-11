@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.egojit.easyweb.upms.dao.mapper.SysCompanyDicMapper">
+    <resultMap id="BaseResultMap" type="com.egojit.easyweb.upms.model.SysCompanyDic">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="companyId" column="company_id" jdbcType="VARCHAR"/>
+        <result property="dicId" column="dic_id" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" jdbcType="CHAR"/>
+    </resultMap>
+
+    <select id="selectByCompany" resultType="java.util.Map" parameterType="java.util.Map">
+        select cd.id AS id,d.id as dicId, d.label,d.`value`,d.description,cd.company_id as companyId,d.parent_id as
+        parentId from sys_dict d INNER JOIN sys_company_dic cd
+        on cd.dic_id=d.id
+        <where>
+            d.del_flag='0' and cd.del_flag='0'and cd.company_id = #{companyId}
+            <if test="label != null and label!=''">
+                and d.label LIKE '%${label}%'
+            </if>
+            <if test="value != null and value!=''">
+                and d.value LIKE '%${value}%'
+            </if>
+            <if test="parentId != null and parentId!=''">
+                and d.parent_id=#{parentId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAllByCompany" resultType="java.util.Map" parameterType="java.lang.String">
+        select d.id,d.label,d.`value`,d.type,d.description,d.parent_id as parentId from sys_dict d INNER JOIN sys_company_dic cd
+        on cd.dic_id=d.id WHERE
+            d.del_flag='0' and cd.del_flag='0'and cd.company_id = #{companyId}
+        UNION
+        SELECT  d.id,d.label,d.`value`,d.type,d.description,d.parent_id as parentId from sys_dict d where d.is_comm=1 and d.del_flag='0'
+    </select>
+
+    <select id="selectCountByCompany" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(d.id) as count from sys_dict d INNER JOIN sys_company_dic cd
+        on cd.dic_id=d.id
+        <where>
+            d.del_flag='0' and cd.del_flag='0' and cd.company_id = #{companyId}
+            <if test="label != null and label!=''">
+                and label LIKE '%${label}%'
+            </if>
+            <if test="value != null and value!=''">
+                and value LIKE '%${value}%'
+            </if>
+            <if test="parentId != null and parentId!=''">
+                and d.parent_id=#{parentId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getCanSelectDic" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT cd.id AS id,d.id as dicId, d.`value`,d.label,d.description,cd.company_id as companyId,d.parent_id as parentId
+        from sys_dict d LEFT JOIN
+(SELECT id,company_id,dic_id FROM sys_company_dic where del_flag='0' AND company_id=#{companyId}) AS cd
+ON d.id=cd.dic_id where cd.dic_id is NULL AND d.del_flag='0'  AND d.is_comm=0
+    </select>
+</mapper>

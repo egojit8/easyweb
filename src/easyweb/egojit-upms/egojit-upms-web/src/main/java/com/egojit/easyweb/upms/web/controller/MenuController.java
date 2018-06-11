@@ -2,16 +2,15 @@ package com.egojit.easyweb.upms.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.egojit.easyweb.common.base.BaseResult;
 import com.egojit.easyweb.common.base.BaseResultCode;
 import com.egojit.easyweb.common.base.BaseWebController;
 import com.egojit.easyweb.common.base.Page;
+import com.egojit.easyweb.common.models.User;
 import com.egojit.easyweb.common.utils.StringUtils;
 import com.egojit.easyweb.upm.service.SysMenuService;
-import com.egojit.easyweb.upms.common.utils.UserUtils;
 import com.egojit.easyweb.upms.model.SysMenu;
-import com.egojit.easyweb.upms.model.SysUser;
+import com.egojit.easyweb.upms.sso.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +64,7 @@ public class MenuController  extends BaseWebController{
     @ResponseBody
     public BaseResult edit(SysMenu model){
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
-        SysUser curentUser= UserUtils.getUser();
+        User curentUser= UserUtils.getUser();
         if(StringUtils.isEmpty(model.getId())){
             model.setCreateBy(curentUser.getId());
             model.setUpdateBy(curentUser.getId());
@@ -137,10 +136,21 @@ public class MenuController  extends BaseWebController{
     @PostMapping("/tree")
     @ResponseBody
     public JSONArray tree(SysMenu model) {
-        return service.getMenus(model,false);
+        return service.getMenus(null,model.getId(),false);
     }
 
 
+    /**
+     * 返回树形结构所有菜单,并且设置被勾选的id
+     * @return
+     */
+    @ApiOperation(value = "菜单管理-返回树形结构所有菜单")
+    @PostMapping("/treeAndCheck")
+    @ResponseBody
+    public JSONArray treeAndCheck(String id,String ckId) {
+        return service.getMenus(ckId,id);
+
+    }
     /**
      * 根据父资源获取下属所有资源
      * @return
@@ -149,10 +159,29 @@ public class MenuController  extends BaseWebController{
     @PostMapping("/alltree")
     @ResponseBody
     public JSONArray allTree(SysMenu model) {
-        return service.getMenus(model,true);
+        return service.getMenus(null,model.getId(),true);
+
     }
 
 
+    /**
+     * 根据父资源获取下属所有资源
+     * @return
+     */
+    @ApiOperation(value = "菜单管理-获取用户的菜单")
+    @PostMapping("/userMenusTree")
+    @ResponseBody
+    public JSONArray userMenusTree(String roleId,String pMenuId) {
+
+        User loginUser=UserUtils.getUser();
+        String userId=loginUser.getId();
+        if(loginUser.isAdmin()){//管理员获取所有菜单权限
+            return service.getMenus(roleId,pMenuId,true);
+        }else {
+            return service.getMenusByUserId(roleId,userId, pMenuId, true);
+        }
+
+    }
 
 
 

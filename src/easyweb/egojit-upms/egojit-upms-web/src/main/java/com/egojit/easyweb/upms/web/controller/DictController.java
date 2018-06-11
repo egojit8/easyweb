@@ -7,14 +7,11 @@ import com.egojit.easyweb.common.base.BaseResult;
 import com.egojit.easyweb.common.base.BaseResultCode;
 import com.egojit.easyweb.common.base.BaseWebController;
 import com.egojit.easyweb.common.base.Page;
-import com.egojit.easyweb.common.utils.MD5Util;
+import com.egojit.easyweb.common.models.User;
 import com.egojit.easyweb.common.utils.StringUtils;
 import com.egojit.easyweb.upm.service.SysDictService;
-import com.egojit.easyweb.upm.service.SysUserService;
-import com.egojit.easyweb.upms.common.utils.UserUtils;
 import com.egojit.easyweb.upms.model.SysDict;
-import com.egojit.easyweb.upms.model.SysUser;
-import com.fasterxml.jackson.databind.ser.Serializers;
+import com.egojit.easyweb.upms.sso.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +23,12 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 /**
- * 备注：DictController 字典管理
- * 作者：egojit
- * 日期：2017/12/04
+ * 备注：字典管理
+ * 作者：高露
+ * Q Q:408365330
+ * 日期：2018/04/23
  */
 @Controller
 @RequestMapping("/admin/dict")
@@ -44,7 +41,7 @@ public class DictController extends BaseWebController {
     @RequestMapping("/index")
     @ApiOperation(value = "字典管理首页")
     public String index(){
-        return "/dict/index";
+        return "/upms/dict/index";
     }
 
     @ResponseBody
@@ -61,7 +58,7 @@ public class DictController extends BaseWebController {
     @RequestMapping("/edit")
     @ApiOperation(value = "字典管理-编辑界面")
     public String add(){
-        return "/dict/edit";
+        return "/upms/dict/edit";
     }
 
     @ApiOperation(value = "字典管理-编辑接口")
@@ -69,9 +66,15 @@ public class DictController extends BaseWebController {
     @ResponseBody
     public BaseResult edit(SysDict model){
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
-        SysUser curentUser= UserUtils.getUser();
-        service.update(model,curentUser);
+        User curentUser= UserUtils.getUser();
+        service.update(model,curentUser.getId());
         return result;
+    }
+
+    @RequestMapping("/detail")
+    @ApiOperation(value = "字典管理-详情界面")
+    public String detail(){
+        return "/upms/dict/detail";
     }
 
     @ApiOperation(value = "字典管理-详情接口")
@@ -83,9 +86,6 @@ public class DictController extends BaseWebController {
         result.setData(model);
         return result;
     }
-
-
-
 
 
     /**
@@ -100,9 +100,6 @@ public class DictController extends BaseWebController {
         List<SysDict> list=index(request,response,model).getRows();
         return new BaseResult(BaseResultCode.SUCCESS, list);
     }
-
-
-
 
 
     /**
@@ -132,7 +129,7 @@ public class DictController extends BaseWebController {
 
 
     /**
-     * 获取所有机构列表
+     * 树层级结构接口
      * @return
      */
     @ApiOperation(value = "字典管理-树层级结构接口")
@@ -161,9 +158,10 @@ public class DictController extends BaseWebController {
     @ApiOperation(value = "字典管理-树层级结构接口")
     @PostMapping("/get_by_parentid")
     @ResponseBody
-    public BaseResult getByParentId(SysDict model) {
+    public BaseResult getByParentId(String  pValue) {
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
-        result.setData(tree(model));
+        List<SysDict> midList = service.getDicByParentId(pValue);
+        result.setData(midList);
         return result;
     }
 

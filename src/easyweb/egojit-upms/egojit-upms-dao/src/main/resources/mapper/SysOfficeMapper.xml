@@ -9,6 +9,7 @@
     <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
     <result column="parent_ids" jdbcType="VARCHAR" property="parentIds" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="office_num" jdbcType="VARCHAR" property="officeNum" />
     <result column="sort" jdbcType="DECIMAL" property="sort" />
     <result column="area_id" jdbcType="VARCHAR" property="areaId" />
     <result column="code" jdbcType="VARCHAR" property="code" />
@@ -38,6 +39,7 @@
     <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
     <result column="parent_ids" jdbcType="VARCHAR" property="parentIds" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="office_num" jdbcType="VARCHAR" property="officeNum" />
     <result column="sort" jdbcType="DECIMAL" property="sort" />
     <result column="area_id" jdbcType="VARCHAR" property="areaId" />
     <result column="code" jdbcType="VARCHAR" property="code" />

@@ -1,12 +1,13 @@
 package com.egojit.easyweb.upms.sso.config;
 
 
-import com.egojit.easyweb.common.security.shiro.session.CacheSessionDAO;
-import com.egojit.easyweb.common.security.shiro.session.SessionDAO;
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.egojit.easyweb.common.security.shiro.cache.RedisCacheManager;
+import com.egojit.easyweb.common.security.shiro.session.RedisSessionDAO;
 import com.egojit.easyweb.common.security.shiro.session.SessionManager;
 import com.egojit.easyweb.common.utils.IdGen;
 import com.egojit.easyweb.upms.sso.security.SystemAuthorizingRealm;
-import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -15,11 +16,13 @@ import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.filter.DelegatingFilterProxy;
 
 import java.util.HashMap;
@@ -33,9 +36,11 @@ import java.util.Map;
 public class ShiroConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(ShiroConfiguration.class);
 
+//    @Autowired
+//    RedisSessionDAO redisSessionDAO;
 
     @Bean
-    public FilterRegistrationBean delegatingFilterProxy(){
+    public FilterRegistrationBean delegatingFilterProxy() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         DelegatingFilterProxy proxy = new DelegatingFilterProxy();
         proxy.setTargetFilterLifecycle(true);
@@ -43,6 +48,7 @@ public class ShiroConfiguration {
         filterRegistrationBean.setFilter(proxy);
         return filterRegistrationBean;
     }
+
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(
             DefaultWebSecurityManager securityManager,
@@ -56,7 +62,7 @@ public class ShiroConfiguration {
         // 登录成功后要跳转的连接
         shiroFilterFactoryBean.setSuccessUrl("/admin/index");
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
-        Map map=new HashMap<>();
+        Map map = new HashMap<>();
 //        map.put("authc",formAuthenticationFilter);
         shiroFilterFactoryBean.setFilters(map);
         loadShiroFilterChain(shiroFilterFactoryBean);
@@ -68,24 +74,24 @@ public class ShiroConfiguration {
     public DefaultWebSecurityManager getDefaultWebSecurityManager(
             SystemAuthorizingRealm myShiroRealm,
             DefaultWebSessionManager sessionManager,
-            EhCacheManager shiroCacheManager) {
+            CacheManager shiroCacheManager) {
         DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
         dwsm.setRealm(myShiroRealm);
         dwsm.setSessionManager(sessionManager);
-//      <!-- 用户授权/认证信息Cache, 采用EhCache 缓存 -->
+//      <!-- 用户授权/认证信息Cache, 采用redis 缓存 -->
         dwsm.setCacheManager(shiroCacheManager);
         return dwsm;
     }
+
     @Bean(name = "sessionManager")
     public DefaultWebSessionManager getSessionManager(
-            SessionDAO sessionDAO,
+            RedisSessionDAO sessionDAO,
             SimpleCookie sessionIdCookie) {
-        SessionManager sessionManager=new SessionManager();
-//        SessionManager sessionManager = new SessionManager();
+        SessionManager sessionManager = new SessionManager();
         sessionManager.setSessionDAO(sessionDAO);
         sessionManager.setGlobalSessionTimeout(1800000);
-        //定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话
-        sessionManager.setSessionValidationInterval(120000);
+        //定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话4分钟检查一次
+        sessionManager.setSessionValidationInterval(24000);
         sessionManager.setSessionValidationSchedulerEnabled(true);
         sessionManager.setSessionIdCookie(sessionIdCookie);
         sessionManager.setSessionIdCookieEnabled(true);
@@ -93,44 +99,42 @@ public class ShiroConfiguration {
     }
 
     @Bean(name = "sessionIdCookie")
-    public SimpleCookie getSessionIdCookie(){
-        SimpleCookie cookie=new SimpleCookie("easysite.session.id");
+    public SimpleCookie getSessionIdCookie() {
+        SimpleCookie cookie = new SimpleCookie("jtlt.session.id");
         return cookie;
 
     }
 
-    @Bean(name = "sessionDAO")
-    public SessionDAO getSessionDAO(IdGen idGen, EhCacheManager shiroCacheManager){
-        CacheSessionDAO cacheSessionDAO=new CacheSessionDAO();
-        cacheSessionDAO.setSessionIdGenerator(idGen);
-        cacheSessionDAO.setActiveSessionsCacheName("activeSessionsCache");
-        cacheSessionDAO.setCacheManager(shiroCacheManager);
-        return cacheSessionDAO;
-    }
+////    @Bean(name = "sessionDAO")
+//    public RedisSessionDAO getSessionDAO(IdGen idGen){
+//        redisSessionDAO.setSessionIdGenerator(idGen);
+//        redisSessionDAO.setActiveSessionsCacheName("activeSessionsCache");
+////        redisSessionDAO.setCacheManager(shiroCacheManager);
+//        return redisSessionDAO;
+//    }
 
     @Bean(name = "idGen")
-    public IdGen getidGen(){
-       IdGen idGen=new IdGen();
-       return idGen;
+    public IdGen getidGen() {
+        IdGen idGen = new IdGen();
+        return idGen;
     }
 
 
-    @Bean(name = "shiroCacheManager")
-    public EhCacheManager getShiroCacheManager(EhCacheManagerFactoryBean cacheManager) {
-        EhCacheManager em = new EhCacheManager();
-        em.setCacheManager(cacheManager.getObject());
-        return em;
-    }
-
-    @Bean(name = "cacheManager")
-    public EhCacheManagerFactoryBean getCacheManager() {
-        EhCacheManagerFactoryBean em = new EhCacheManagerFactoryBean();
-        em.setConfigLocation(new ClassPathResource("cache/ehcache-local.xml"));
-        return em;
-    }
-
-
-
+//    /**
+//     * 设置redis
+//     * @return
+//     */
+//    @Bean(name = "shiroCacheManager")
+//    public CacheManager getShiroCacheManager() {
+//        RedisCacheManager cacheManager = new RedisCacheManager();
+//        //默认超时时间,单位秒
+//        cacheManager.setDefaultExpiration(600);
+//        //根据缓存名称设置超时时间,0为不超时
+////        Map<String,Long> expires = new ConcurrentHashMap<>();
+////        cacheManager.setExpires(expires);
+//
+//        return cacheManager;
+//    }
 
 
     @Bean
@@ -144,9 +148,9 @@ public class ShiroConfiguration {
      * 加载shiroFilter权限控制规则（从数据库读取然后配置）
      *
      * @author SHANHY
-     * @create  2016年1月14日
+     * @create 2016年1月14日
      */
-    private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean){
+    private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean) {
         /////////////////////// 下面这些规则配置最好配置到配置文件中 ///////////////////////
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         // authc：该过滤器下的页面必须验证后才能访问，它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter
@@ -163,6 +167,9 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }
 
+    @Bean
+    public ShiroDialect shiroDialect() {
+        return new ShiroDialect();
 
-
+    }
 }

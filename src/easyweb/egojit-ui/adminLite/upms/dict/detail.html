@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.springframework.org/schema/mvc">
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_jqgrid.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:02 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>字典详情</title>
+    <meta name="keywords" content="字典详情">
+    <meta name="description" content="字典详情">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css"
+          rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../asset/css/style.min862f.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg; " style="height: 100%;" >
+<form class="form-horizontal white-bg" id="formSubmit" style="height: 100%;">
+
+    <div id="detailBox" class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox ">
+            <div class="ibox-title">
+                字典信息
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+
+                    <label class="col-sm-2 control-label">名称：</label>
+                    <div class="col-sm-4">
+                        <label id="label" name="label" class="form-control"></label>
+                    </div>
+                    <label class="col-sm-2 control-label">值：</label>
+                    <div class="col-sm-4">
+                        <label id="value" name="value" class="form-control"></label>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">是否通用：</label>
+                    <div class="col-sm-4">
+                        <label id="comm" name="comm" class="form-control" ></label>
+                    </div>
+                    <label class="col-sm-2 control-label">排序：</label>
+                    <div class="col-sm-4">
+                        <label id="sort" name="sort" class="form-control" ></label>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">描述：</label>
+                    <div class="col-sm-10">
+                        <label id="remarks" name="remarks" class="form-control"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+<script type="text/javascript">
+
+
+    //初始化界面
+    function initView() {
+        getDetail();
+
+    }
+    /**
+     * 获取详情
+     */
+    function getDetail() {
+        var id = app.getRequest()["id"];
+        if (id && id.length > 0) {//编辑
+            app.post("/admin/dict/detail", {id: id}, function (data) {
+                app.initDetailLableView("#formSubmit", data);
+                if(data.comm==true){
+                    $("#comm").html("是")
+                }else{
+                    $("#comm").html("否")
+                }
+            });
+        }
+    }
+
+    $().ready(function () {
+        initView();
+    });
+</script>
+</body>
+</html>

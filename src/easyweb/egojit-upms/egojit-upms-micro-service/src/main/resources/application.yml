@@ -10,9 +10,9 @@ spring:
   datasource:
     name: era
     dbtype: mysql
-    url: jdbc:mysql://localhost:3306/jeesite_admin?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://dingdou666.com:3306/jtlt_dev?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
-    password: ENC(8ausfd6XL8a1uzkMb7sU2y7ekv8ecwIh)
+    password: egojit123
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
     initialSize: 5

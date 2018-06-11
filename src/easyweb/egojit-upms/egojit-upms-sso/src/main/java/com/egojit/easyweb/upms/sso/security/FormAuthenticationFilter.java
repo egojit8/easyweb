@@ -16,9 +16,11 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 表单验证（包含验证码）过滤类
- * @author ThinkGem
- * @version 2014-5-19
+ * Description：表单验证（包含验证码）过滤类
+ * Auther：高露
+ * Q Q:408365330
+ * Company: 鼎斗信息技术有限公司
+ * Time:2018-4-25
  */
 @Service
 public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.FormAuthenticationFilter {

@@ -2,20 +2,15 @@
  * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
  */
 package com.egojit.easyweb.upms.sso.security;
-import com.egojit.easyweb.common.Encodes;
 import com.egojit.easyweb.common.Global;
-import com.egojit.easyweb.common.security.shiro.session.SessionDAO;
 import com.egojit.easyweb.common.utils.MD5Util;
-import com.egojit.easyweb.common.web.Servlets;
 import com.egojit.easyweb.common.web.ValidateCodeServlet;
 import com.egojit.easyweb.upm.service.SysUserService;
-import com.egojit.easyweb.upms.dao.mapper.SysUserMapper;
+import com.egojit.easyweb.upms.sso.UserUtils;
 import com.egojit.easyweb.upms.model.SysMenu;
 import com.egojit.easyweb.upms.model.SysRole;
 import com.egojit.easyweb.upms.model.SysUser;
 import com.egojit.easyweb.upms.sso.LoginUtil;
-import com.egojit.easyweb.upms.sso.UserUtils;
-import com.mysql.jdbc.log.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -33,26 +28,31 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import static com.egojit.easyweb.common.utils.UserUtil.CACHE_AUTH_INFO;
+
 /**
- * 系统安全认证实现类
- * @author Egojit
- * @version 2017-7-5
+ * Description：系统安全认证实现类
+ * Auther：高露
+ * Q Q:408365330
+ * Company: 鼎斗信息技术有限公司
+ * Time:2018-4-25
  */
-@Service
+@Component
 public class SystemAuthorizingRealm extends AuthorizingRealm {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 //	public static final String HASH_ALGORITHM = "MD5";
 //	public static final int HASH_INTERATIONS = 1024;
-	@Autowired
-	private SessionDAO sessionDao;
+
+//	@Autowired
+//	private RedisSessionDAO sessionDao;
+
 	@Autowired
 	private SysUserService sysUserService;
 	
@@ -68,10 +68,10 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 
-		int activeSessionSize =sessionDao.getActiveSessions(false).size();
-		if (logger.isDebugEnabled()){
-			logger.debug("login submit, active session size: {}, username: {}", activeSessionSize, token.getUsername());
-		}
+//		int activeSessionSize =sessionDao.getActiveSessions(false).size();
+//		if (logger.isDebugEnabled()){
+//			logger.debug("login submit, active session size: {}, username: {}", activeSessionSize, token.getUsername());
+//		}
 
 		// 校验登录验证码
 		if (LoginUtil.isValidateCodeLogin(token.getUsername(), false, false)){
@@ -88,10 +88,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			if (Global.NO.equals(user.getLoginFlag())){
 				throw new AuthenticationException("msg:该已帐号禁止登录.");
 			}
-
 			ByteSource credentialsSalt = ByteSource.Util.bytes(user.getLoginName());
-
-
 //			SimpleAuthenticationInfo info =  new SimpleAuthenticationInfo(new Principal(user),
 //					user.getPassword(), credentialsSalt, user.getName());
 			SimpleAuthenticationInfo info =  new SimpleAuthenticationInfo(user.getLoginName(),
@@ -111,12 +108,12 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
         }
 		
         AuthorizationInfo info = null;
-        info = (AuthorizationInfo)UserUtils.getCache(UserUtils.CACHE_AUTH_INFO);
+        info = (AuthorizationInfo)UserUtils.getCache(CACHE_AUTH_INFO);
 
         if (info == null) {
             info = doGetAuthorizationInfo(principals);
             if (info != null) {
-            	UserUtils.putCache(UserUtils.CACHE_AUTH_INFO, info);
+            	UserUtils.putCache(CACHE_AUTH_INFO, info);
             }
         }
 
@@ -159,7 +156,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 				}
 			}
 			// 添加用户权限
-			info.addStringPermission("user");
+//			info.addStringPermission("user");
 			// 添加用户角色信息
 			for (SysRole role : UserUtils.getRoleList()){
 				info.addRole(role.getEnname());

@@ -1,13 +1,11 @@
 package com.egojit.easyweb.upms.model;
 
-import com.egojit.easyweb.common.base.BaseEntity;
-import com.egojit.easyweb.common.base.CurdEndity;
+import com.egojit.easyweb.common.base.Entity.BaseDomainEntity;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Table(name = "sys_menu")
-public class SysMenu extends CurdEndity {
+public class SysMenu extends BaseDomainEntity {
 
 
     /**

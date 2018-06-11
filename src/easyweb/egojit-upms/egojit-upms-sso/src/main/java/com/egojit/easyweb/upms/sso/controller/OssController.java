@@ -1,17 +1,13 @@
 package com.egojit.easyweb.upms.sso.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.egojit.easyweb.common.Global;
 import com.egojit.easyweb.common.base.BaseApiController;
 import com.egojit.easyweb.common.base.BaseResult;
 import com.egojit.easyweb.common.base.BaseResultCode;
 import com.egojit.easyweb.common.utils.CookieUtils;
-import com.egojit.easyweb.common.utils.MD5Util;
 import com.egojit.easyweb.common.utils.StringUtils;
 import com.egojit.easyweb.upm.service.SysUserService;
-import com.egojit.easyweb.upms.model.SysUser;
 import com.egojit.easyweb.upms.sso.UserUtils;
-import com.egojit.easyweb.upms.sso.security.SystemAuthorizingRealm;
 import com.egojit.easyweb.upms.sso.security.UsernamePasswordToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -82,16 +78,15 @@ public class OssController extends BaseApiController {
     public BaseResult login(@RequestParam(required = true) String username,
                             @RequestParam(required = true) String password) {
         Subject subject = SecurityUtils.getSubject();
-//        password = MD5Util.shiroPwd(password,username);
 
         try {
             // 登录，即身份验证
             UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray(),false,null,"");
             Subject currentUser = SecurityUtils.getSubject();
             currentUser.login(token);
-            SysUser user = userService.getByLoginName(token.getUsername());
-//            // 在session中存放用户信息
-            subject.getSession().setAttribute("userLogin", user);
+//            SysUser user = userService.getByLoginName(token.getUsername());
+////            // 在session中存放用户信息
+//            subject.getSession().setAttribute("userLogin", user);
         }
         catch (UnknownAccountException e) {
             return new BaseResult(BaseResultCode.UNAUTH, "账号不存在");

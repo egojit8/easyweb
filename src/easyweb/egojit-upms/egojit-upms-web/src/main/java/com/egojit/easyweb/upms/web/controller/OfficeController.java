@@ -7,14 +7,14 @@ import com.egojit.easyweb.common.base.BaseResult;
 import com.egojit.easyweb.common.base.BaseResultCode;
 import com.egojit.easyweb.common.base.BaseWebController;
 import com.egojit.easyweb.common.base.Page;
-import com.egojit.easyweb.common.utils.MD5Util;
+import com.egojit.easyweb.common.models.User;
 import com.egojit.easyweb.common.utils.StringUtils;
 import com.egojit.easyweb.upm.service.SysOfficeService;
-import com.egojit.easyweb.upms.common.utils.UserUtils;
 import com.egojit.easyweb.upms.model.SysOffice;
-import com.egojit.easyweb.upms.model.SysUser;
+import com.egojit.easyweb.upms.sso.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 备注：CompanyController 公司
- * 作者：egojit
- * 日期：2017/11/28
+ * Description：机构控制器
+ * Auther：高露
+ * Q Q:408365330
+ * Company: 鼎斗信息技术有限公司
+ * Time:2018-4-25
  */
 @Controller
 @RequestMapping("/admin/office")
@@ -42,13 +44,15 @@ public class OfficeController extends BaseWebController{
 
     @RequestMapping("/index")
     @ApiOperation(value = "机构管理首页")
+    @RequiresPermissions("upms:office:read")
     public String index(){
-        return "/office/index";
+        return "/upms/office/index";
     }
 
     @ResponseBody
     @PostMapping("/delete")
     @ApiOperation(value = "机构管理-删除接口")
+    @RequiresPermissions("upms:office:delete")
     public BaseResult delete(String ids){
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"删除成功");
         List<String> idList= JSON.parseArray(ids,String.class);
@@ -59,16 +63,21 @@ public class OfficeController extends BaseWebController{
 
     @RequestMapping("/edit")
     @ApiOperation(value = "机构管理-编辑界面")
+    @RequiresPermissions("upms:office:edit")
     public String add(){
-        return "/office/edit";
+        return "/upms/office/edit";
     }
 
     @ApiOperation(value = "机构管理-编辑接口")
     @PostMapping("/edit")
     @ResponseBody
+    @RequiresPermissions("upms:office:edit")
     public BaseResult edit(SysOffice model){
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
-        SysUser curentUser= UserUtils.getUser();
+        User curentUser= UserUtils.getUser();
+        if(StringUtils.isEmpty(model.getParentId())){
+            model.setParentId("1");
+        }
         if(StringUtils.isEmpty(model.getId())){
             model.setCreateBy(curentUser.getId());
             model.setUpdateBy(curentUser.getId());
@@ -79,19 +88,24 @@ public class OfficeController extends BaseWebController{
         }
         return result;
     }
+    @RequestMapping("/detail")
+    @ApiOperation(value = "机构管理-详情")
+    @RequiresPermissions("upms:office:read")
+    public String detail(){
+        return "/upms/office/detail";
+    }
+
 
     @ApiOperation(value = "机构管理-详情接口")
     @PostMapping("/detail")
     @ResponseBody
+    @RequiresPermissions("upms:office:read")
     public BaseResult detail(String id){
         BaseResult result=new BaseResult(BaseResultCode.SUCCESS,"成功");
         SysOffice model=  service.selectByPrimaryKey(id);
         result.setData(model);
         return result;
     }
-
-
-
 
 
     /**
@@ -103,36 +117,25 @@ public class OfficeController extends BaseWebController{
     @ResponseBody
     public BaseResult list(HttpServletRequest request,
                             HttpServletResponse response, SysOffice model) {
-        List<SysOffice> list=index(request,response,model).getRows();
+        Example example = new Example(SysOffice.class);
+        Example.Criteria criteria = example.createCriteria();
+        User loginUser=UserUtils.getUser();
+        if (!StringUtils.isEmpty(model.getName())) {
+            criteria.andLike("name", "%" + model.getName() + "%");
+        }
+        if (StringUtils.isEmpty(model.getParentId())) {
+            if(!loginUser.isAdmin()){
+                SysOffice office= service.selectByPrimaryKey(loginUser.getCompany().getId());
+                criteria.andEqualTo("parentId",office.getParentId());
+            }else{
+                criteria.andEqualTo("parentId","1");
+            }
+        }else {
+            criteria.andEqualTo("parentId",model.getParentId());
+        }
+        List<SysOffice> list = service.selectByExample(example);
         return new BaseResult(BaseResultCode.SUCCESS, list);
     }
-
-    /**
-     * 获取当前用户机构信息
-     * @return
-     */
-    @PostMapping("/getofficebyuser")
-    @ResponseBody
-    public BaseResult getCurentOffices() {
-        SysUser user= UserUtils.getUser();
-        Example example=new Example(SysOffice.class);
-        List<SysOffice> offices=new ArrayList<SysOffice>();
-        if(user.isAdmin()){
-            offices=service.selectAll();
-        }else{
-            String companyId=user.getOfficeId();
-            SysOffice currentOffice= service.selectByPrimaryKey(companyId);
-            if(currentOffice!=null){
-               String parentIds= currentOffice.getParentIds();
-                Example.Criteria criteria= example.createCriteria();
-                String inCondition=parentIds.substring(0,parentIds.length()-1);
-                criteria.andCondition(" id in ("+inCondition+")");
-                offices=service.selectByExample(example);
-            }
-        }
-        return new BaseResult(BaseResultCode.SUCCESS, offices);
-    }
-
 
 
     /**
@@ -148,12 +151,17 @@ public class OfficeController extends BaseWebController{
 
         Example example = new Example(SysOffice.class);
         Example.Criteria criteria = example.createCriteria();
+        User loginUser=UserUtils.getUser();
         if (!StringUtils.isEmpty(model.getName())) {
             criteria.andLike("name", "%" + model.getName() + "%");
         }
-
         if (StringUtils.isEmpty(model.getParentId())) {
-            criteria.andEqualTo("parentId","0");//获取公司
+            if(!loginUser.isAdmin()){
+                SysOffice office= service.selectByPrimaryKey(loginUser.getCompany().getId());
+                criteria.andEqualTo("parentId",office.getParentId());
+            }else{
+                criteria.andEqualTo("parentId","0");
+            }
         }else {
             criteria.andEqualTo("parentId",model.getParentId());
         }
@@ -178,7 +186,14 @@ public class OfficeController extends BaseWebController{
         }
 
         if (StringUtils.isEmpty(model.getId())) {
-            criteria.andEqualTo("parentId","0");//获取公司
+            User loginUser=UserUtils.getUser();
+            if(!loginUser.isAdmin()){
+                SysOffice office= service.selectByPrimaryKey(loginUser.getCompany().getId());
+                criteria.andEqualTo("parentId",office.getParentId());
+            }else{
+                criteria.andEqualTo("parentId","0");
+            }
+
         }else {
             criteria.andEqualTo("parentId",model.getId());
         }
@@ -210,6 +225,79 @@ public class OfficeController extends BaseWebController{
         return  count>0?true:false;
     }
 
+    /**
+     * 获取所有公司列表
+     * @param model
+     * @return
+     */
+    @PostMapping("/getAllCompanys")
+    @ResponseBody
+    public BaseResult getAllCompanys(HttpServletRequest request,
+                           HttpServletResponse response, SysOffice model) {
+        Example example = new Example(SysOffice.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("type","1");
+        List<SysOffice> list = service.selectByExample(example);
+        return new BaseResult(BaseResultCode.SUCCESS, list);
+    }
+    /**
+     * 获取所有树形公司
+     * @param model
+     * @return
+     */
+    @PostMapping("/getCompanysTree")
+    @ResponseBody
+    public JSONArray getCompanysTree(HttpServletRequest request,
+                                     HttpServletResponse response, SysOffice model) {
+        Example example = new Example(SysOffice.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("type","1");
+        List<SysOffice> list = service.selectByExample(example);
+        JSONArray array= getChilds(list,"0");
+        return array;
+    }
+
+
+
+    /**
+     * 获取子节点
+     * @param list
+     * @param pId
+     * @return
+     */
+    private JSONArray getChilds(List<SysOffice> list,String pId){
+        JSONArray array=new JSONArray();
+        for (SysOffice item:list){
+            if(pId.equals(item.getParentId())){
+                JSONObject  obj=new JSONObject();
+                obj.put("name",item.getName());
+                obj.put("id",item.getId());
+                obj.put("pId",item.getParentId());
+                obj.put("pIds",item.getParentIds());
+                boolean isHaveChild=isHaveChild(list,item.getId());
+                obj.put("isParent",""+isHaveChild);
+                if(isHaveChild){
+                    obj.put("children",getChilds(list,item.getId()));
+                }
+                array.add(obj);
+            }
+        }
+        return array;
+    }
+
+    /**
+     * 判断是否有子部门
+     * @param id
+     * @return
+     */
+    public boolean isHaveChild(List<SysOffice> list,String id){
+        for (SysOffice item:list){
+            if(id.equals(item.getParentId())){
+                return true;
+            }
+        }
+        return  false;
+    }
 
 
 }

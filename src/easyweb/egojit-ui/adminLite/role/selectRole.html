@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>角色选择</title>
+    <meta name="keywords" content="角色选择">
+    <meta name="description" content="角色选择">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet"/>
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css"
+          rel="stylesheet"/>
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../asset/css/style.min862f.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/css/zTreeStyle/zTreeStyle.css'"
+          href="../asset/js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+
+</head>
+
+<body class="gray-bg full-height">
+<div class="row animated fadeInRight" style="height: 80%">
+    <div class="col-sm-12" style="padding-left: 5px">
+        <div class="ibox ">
+            <div class="ibox-title ">
+                <div class="row">
+                    <form class="form-inline" id="formSearch">
+
+                        <div class="col-sm-8 form-group">
+                            <label style="width: 60px">名称</label>
+                            <input type="text" name="name" placeholder="请输入名称" class="form-control">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <button id="btnRest" class="btn btn-primary btn-xs skin_blue_buttom"
+                                    style="float: right; margin-left: 10px" type="button"><i
+                                    class="icon egojit-front icon-add"></i>&nbsp;重置
+                            </button>
+                            <button id="btnSearch" class="btn btn-warning btn-xs" type="button"
+                                    style="float: right;"><i class="icon egojit-front icon-search"></i>&nbsp;搜索
+                            </button>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="ibox-content" style="padding-top: 10px">
+                <div class="jqGrid_wrapper">
+                    <table id="table_list1"></table>
+                    <div id="pager_list1"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="col-sm-12 col-sm-offset-1" style="height: 20%">
+    <button class="btn btn-primary" id="btnSelectOk" type="button">提交</button>
+</div>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/peity/jquery.peity.min.js'"
+        src="../asset/js/plugins/peity/jquery.peity.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/i18n/grid.locale-cnffe4.js'"
+        src="../asset/js/plugins/jqgrid/i18n/grid.locale-cnffe4.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/jquery.jqGrid.minffe4.js'"
+        src="../asset/js/plugins/jqgrid/jquery.jqGrid.minffe4.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../asset/js/plugins/layer/layer.js"></script>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/js/jquery.ztree.core.min.js'"
+        src="../asset/js/ztree/js/jquery.ztree.core.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/js/jquery.ztree.excheck.min.js'"
+        src="../asset/js/ztree/js/jquery.ztree.excheck.min.js"></script>
+
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+
+
+<!--<script src="js/content.min.js?v=1.0.0"></script>-->
+<script type="text/javascript">
+    var $jqGridObj;
+    var officeId = undefined;
+    var officeName = undefined;
+
+
+    //编辑
+    function detail(id) {
+        app.windows("详情", "/admin/role/edit?id=" + id, "900px", "400px");
+    }
+    //机构的组合
+    function getNamesStr(treeNode) {
+        var names = "";
+        var parentNode = treeNode.getParentNode();
+        if (parentNode != null) {
+            names = getNamesStr(parentNode) + "," + parentNode.name;
+        }
+
+        return names;
+    }
+
+
+    $(document).ready(function () {
+        var userId=app.getRequest()["id"];
+         var parm={userId:userId};
+        app.post("/admin/role/getRoleByUser", parm, function (data) {
+            var roles=data;
+            console.log("角色",data);
+            //列表初始化
+            $jqGridObj = app.list({
+                url: "/admin/role/selectRole",
+                tableId:"#table_list1",
+                pageId:"#pager_list1",
+                postData:{userId:userId},
+                loadComplete:function () {
+                    doSelect(roles);
+                },
+                colNames: ["id","名称", "英文名", "启用"],
+                colModel: [
+                    {name:'id',index:'id',sorttype:'int',width:0,hidden:true,key:true},
+                    {
+                    name: "name",
+                    index: "name",
+                    width: 90,
+                    formatter: function (cellvalue, options, rowObject) {
+                        return '<a href=\"javascript:void(0)\" onclick=\"detail(\'' + rowObject.id + '\')\">' + cellvalue + '</a>';
+                    }
+                }, {
+                    name: "enname",
+                    index: "enname"
+                }
+                    ,
+                    {
+                        name: "useable",
+                        index: "useable",
+                        width: 30,
+                        formatter: function (cellvalue, options, rowObject) {
+                            return cellvalue == "1" ? "启用" : "停用"
+                        }
+                    }
+                ]
+            });
+
+
+        });
+
+        $("#btnSelectOk").click(function () {
+
+            var selectIds= $jqGridObj.list.jqGrid('getGridParam', 'selarrrow');
+            if (selectIds == null || selectIds.length < 1) {
+                app.tip("请选择角色!");
+                return;
+            }
+            // var ids="";
+            // for(i=0;i<selectIds.length;i++){
+            //     ids+=selectIds[i]+",";
+            // }
+            var parm={roleIds:JSON.stringify(selectIds),"userId":userId}
+            app.post("/admin/role/setrole", parm, function (data) {
+                debugger;
+                app.close();
+                // var grid = window.location.reload(); //刷新页面
+            });
+
+
+        });
+    });
+    //设置选中
+    function doSelect(roles) {
+        var allIds = $jqGridObj.list.jqGrid('getDataIDs');
+        console.log(allIds);
+        for (i = 0; i < allIds.length; i++) {
+            console.log(allIds[i]);
+            for(j=0;j<roles.length;j++){
+                if(roles[j].id==allIds[i]){
+                    $jqGridObj.list.jqGrid('setSelection',allIds[i], false);  //无法选中s
+                }
+            }
+
+        }
+    }
+
+
+</script>
+</body>
+</html>

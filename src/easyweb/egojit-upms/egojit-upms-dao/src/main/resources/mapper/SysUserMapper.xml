@@ -8,6 +8,7 @@
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
         <result column="office_id" jdbcType="VARCHAR" property="officeId"/>
+        <result column="car_team_id" jdbcType="VARCHAR" property="carTeamId"/>
         <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="no" jdbcType="VARCHAR" property="no"/>
@@ -27,11 +28,110 @@
         <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
         <result column="del_flag" jdbcType="CHAR" property="delFlag"/>
     </resultMap>
+    <resultMap id="ExtResultMap" type="com.egojit.easyweb.upms.model.SysUserExt">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="company_id" jdbcType="VARCHAR" property="companyId"/>
+        <result column="office_id" jdbcType="VARCHAR" property="officeId"/>
+        <result column="car_team_id" jdbcType="VARCHAR" property="carTeamId"/>
+        <result column="login_name" jdbcType="VARCHAR" property="loginName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="no" jdbcType="VARCHAR" property="no"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="user_type" jdbcType="CHAR" property="userType"/>
+        <result column="photo" jdbcType="VARCHAR" property="photo"/>
+        <result column="login_ip" jdbcType="VARCHAR" property="loginIp"/>
+        <result column="login_date" jdbcType="TIMESTAMP" property="loginDate"/>
+        <result column="login_flag" jdbcType="VARCHAR" property="loginFlag"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="del_flag" jdbcType="CHAR" property="delFlag"/>
+        <association property="company" select="getCompany" column="company_id"  javaType="map">
+            <!-- 这里要注意的是column对应的是student中的外键，而且需是表字段名 -->
+        </association>
+        <association property="department" select="getCompany" column="office_id" javaType="map">
+            <!-- 这里要注意的是column对应的是student中的外键，而且需是表字段名 -->
+        </association>
+        <association property="createUser" select="getUserById" column="create_by"  javaType="map">
+        </association>
+
+    </resultMap>
+
+    <sql id="Example_Where_Clause">
+        <if test="_parameter != null">
+            <where>
+                <foreach collection="oredCriteria" item="criteria">
+                    <if test="criteria.valid">
+                        ${@tk.mybatis.mapper.util.OGNL@andOr(criteria)}
+                        <trim prefix="(" prefixOverrides="and |or " suffix=")">
+                            <foreach collection="criteria.criteria" item="criterion">
+                                <choose>
+                                    <when test="criterion.noValue">
+                                        ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}
+                                    </when>
+                                    <when test="criterion.singleValue">
+                                        ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}
+                                        #{criterion.value}
+                                    </when>
+                                    <when test="criterion.betweenValue">
+                                        ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}
+                                        #{criterion.value} and #{criterion.secondValue}
+                                    </when>
+                                    <when test="criterion.listValue">
+                                        ${@tk.mybatis.mapper.util.OGNL@andOr(criterion)} ${criterion.condition}
+                                        <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                                 separator=",">
+                                            #{listItem}
+                                        </foreach>
+                                    </when>
+                                </choose>
+                            </foreach>
+                        </trim>
+                    </if>
+                </foreach>
+            </where>
+        </if>
+    </sql>
+
 
     <!-- 根据登录名查询用户 -->
-    <select id="getByLoginName" resultMap="BaseResultMap" resultType="com.egojit.easyweb.upms.model.SysUser" parameterType="com.egojit.easyweb.upms.model.SysUser">
+    <select id="getByLoginName" resultMap="BaseResultMap" resultType="com.egojit.easyweb.upms.model.SysUser"
+            parameterType="com.egojit.easyweb.upms.model.SysUser">
         SELECT *
         FROM sys_user a
         WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL}
+    </select>
+
+    <select id="selectExtByExample" parameterType="tk.mybatis.mapper.entity.Example" resultMap="ExtResultMap">
+        select *
+        from sys_user
+        <include refid="Example_Where_Clause" />
+         order by create_date DESC
+    </select>
+
+
+    <select id="getCompany" resultType="map" parameterType="string">
+        SELECT
+        o.name,
+        o.id,
+        o.master,
+        o.phone
+        FROM sys_office o
+        where id = #{company_id}
+    </select>
+
+    <select id="getUserById" resultType="map" parameterType="string">
+        SELECT
+        u.name
+        FROM sys_user as u
+        where id = #{createBy}
     </select>
 </mapper>

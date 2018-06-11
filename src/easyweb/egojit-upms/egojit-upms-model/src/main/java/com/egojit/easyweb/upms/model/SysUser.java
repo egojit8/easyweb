@@ -1,16 +1,13 @@
 package com.egojit.easyweb.upms.model;
 
-import com.egojit.easyweb.common.base.BaseEntity;
-import com.egojit.easyweb.common.base.CurdEndity;
+import com.egojit.easyweb.common.base.Entity.BaseDomainEntity;
 import com.egojit.easyweb.common.utils.StringUtils;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Table(name = "sys_user")
-public class SysUser extends CurdEndity {
+public class SysUser extends BaseDomainEntity {
 
     public SysUser(){
         super();
@@ -31,6 +28,22 @@ public class SysUser extends CurdEndity {
     @Column(name = "office_id")
     private String officeId;
 
+    /**
+     * 所属车队
+     */
+    private String carTeamId;
+
+    /**
+     * 所属车队
+     */
+    @Transient
+    private String carTeamName;
+
+    /**
+     * 创建人
+     */
+    @Transient
+    private String createByName;
     /**
      * 登录名
      */
@@ -102,7 +115,11 @@ public class SysUser extends CurdEndity {
      */
     private String remarks;
 
+    @Transient
+    public String companyName;
 
+    @Transient
+    public String departmentName;
 
 //    private List<SysRole> roleList= new ArrayList<SysRole>();
 
@@ -137,6 +154,14 @@ public class SysUser extends CurdEndity {
      */
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public String getCarTeamId() {
+        return carTeamId;
+    }
+
+    public void setCarTeamId(String carTeamId) {
+        this.carTeamId = carTeamId;
     }
 
     /**
@@ -404,5 +429,35 @@ public class SysUser extends CurdEndity {
         this.remarks = remarks;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
 
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getCarTeamName() {
+        return carTeamName;
+    }
+
+    public void setCarTeamName(String carTeamName) {
+        this.carTeamName = carTeamName;
+    }
+
+    public String getCreateByName() {
+        return createByName;
+    }
+
+    public void setCreateByName(String createByName) {
+        this.createByName = createByName;
+    }
 }

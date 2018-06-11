@@ -81,8 +81,9 @@
     var zTreeObj;
     function initView() {
         var request=app.getRequest();
-        $("#roleId").val(request["id"]);
-        initmenu();
+        var roleId=request["id"];
+        $("#roleId").val(roleId);
+        initmenu(roleId);
 //        getDetail();
         //初始化左机构
         //获取资源类别
@@ -105,13 +106,13 @@
 
     }
 
-    //初始化左侧菜单
-    function initmenu() {
+
+    function initmenu(roleId) {
         //初始化树结构
         var setting = {
             async: {
                 enable: true,
-                url: "/admin/menu/alltree",
+                url: "/admin/menu/userMenusTree?roleId="+roleId,
                 autoParam: ["id"]
             },
             check: {
@@ -127,10 +128,16 @@
                     var ids="0"+getMenusIdsStr(treeNode);
                     $("#parentIds").val(treeNode.id);
                     console.log(ids);
-                }
-                ,
+                },
+                beforeAsync: function () {
+                    app.loding();
+                },
+                onAsyncError:function () {
+                    app.close();
+                },
                 onAsyncSuccess: function (event, treeId, treeNode, msg) {
                     var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                    app.close();
                     treeObj.expandAll(true);
                 }
             }
@@ -174,7 +181,7 @@
                var parm=$.extend(parm,{menusIds:JSON.stringify(ids)});
                 console.log(parm);
                 app.post("/admin/role/power", parm, function (data) {
-                    app.close();
+                    app.closeParent();
                     var grid = window.parent.location.reload(); //刷新父页面
                 });
             }

@@ -30,9 +30,9 @@
 
 </head>
 
-<body class="gray-bg">
-<div class="row animated fadeInRight">
-    <div class="col-sm-2" style="padding-left: 0px;padding-right: 0px; overflow-x: scroll;height: 100%">
+<body class="gray-bg full-height">
+<div class="row animated fadeInRight full-height">
+    <div class="col-sm-2" style="padding-left: 0px;padding-right: 0px; overflow-x: scroll;height: 100%; background: white">
         <div class="ibox">
             <div class="ibox-title">上级菜单</div>
             <div class="ibox-content" style="height: 100%; overflow-y: scroll">
@@ -66,12 +66,12 @@
 
             </div>
             <div class="ibox-content" style="padding-top: 10px">
-                <div class="row" style="margin-bottom: 10px">
-                    <button id="btnDelete" onclick="del()" class="btn btn-primary btn_no_radius btn-xs "
+                <div id="listOprBox"  class="row" style="margin-bottom: 10px">
+                    <button id="btnDelete" onclick="del()" class="btn btn-danger btn-xs "
                             type="button"><i
                             class="icon egojit-front icon-delete"></i>&nbsp;删除
                     </button>
-                    <button id="btnAdd" onclick="add()" class="btn btn-primary btn_no_radius btn-xs " type="button">
+                    <button id="btnAdd" onclick="add()" class="btn btn-primary btn-xs " type="button">
                         <i
                                 class="icon egojit-front icon-add"></i>&nbsp;添加
                     </button>

@@ -37,4 +37,28 @@
     WHERE a.del_flag = '0' AND r.del_flag = '0' AND u.del_flag = '0'
     ORDER BY a.sort
   </select>
+
+  <select id="selectUserMenuByPid" resultMap="BaseResultMap" parameterType="map" resultType="com.egojit.easyweb.upms.model.SysMenu">
+     select DISTINCT  a.*
+    FROM sys_menu a
+    JOIN sys_role_menu rm ON rm.menu_id = a.id
+    <if test="parentId != null and parentId != '' ">
+      and a.parent_id=#{parentId}
+    </if>
+    JOIN sys_role r ON r.id = rm.role_id AND r.useable='1'
+    JOIN sys_user_role ur ON ur.role_id = r.id
+    JOIN sys_user u ON u.id = ur.user_id
+    <if test="userId != null and userId != '' ">
+      AND u.id = #{userId}
+    </if>
+
+    WHERE a.del_flag = '0' AND r.del_flag = '0' AND u.del_flag = '0'
+    ORDER BY a.sort
+  </select>
+
+  <select id="isRoleHaveMenu" parameterType="map" resultType="Integer">
+    select  COUNT(a.id)
+    FROM sys_menu a
+    JOIN sys_role_menu rm ON rm.menu_id = a.id and rm.role_id=#{roleId} and rm.menu_id=#{menuId}
+  </select>
 </mapper>

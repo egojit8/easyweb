@@ -9,9 +9,11 @@
     <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="label" jdbcType="VARCHAR" property="label" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="dic_iamge" jdbcType="VARCHAR" property="dicIamge" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="sort" jdbcType="DECIMAL" property="sort" />
     <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="is_comm" jdbcType="TINYINT" property="isComm" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />

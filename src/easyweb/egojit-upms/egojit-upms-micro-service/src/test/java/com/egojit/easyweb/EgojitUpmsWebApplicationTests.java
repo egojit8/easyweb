@@ -1,6 +1,5 @@
 package com.egojit.easyweb;
 
-import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,12 @@ public class EgojitUpmsWebApplicationTests {
 	public void contextLoads() {
 	}
 
-	@Autowired
-	StringEncryptor stringEncryptor;//密码解码器自动注入
-
-	@Test
-	public void test() {
-		System.out.println(stringEncryptor.encrypt("egojit123"));
-	}
+//	@Autowired
+//	StringEncryptor stringEncryptor;//密码解码器自动注入
+//
+//	@Test
+//	public void test() {
+//		System.out.println(stringEncryptor.encrypt("egojit123"));
+//	}
 
 }

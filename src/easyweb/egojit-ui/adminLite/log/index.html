@@ -7,8 +7,8 @@
 
 
     <title>日志管理</title>
-    <meta name="keywords" content="用户管理">
-    <meta name="description" content="用户管理">
+    <meta name="keywords" content="日志管理">
+    <meta name="description" content="日志管理">
 
     <link rel="shortcut icon" href="favicon.ico">
     <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
@@ -36,7 +36,7 @@
                         <input type="text" name="loginName" placeholder="请输入标题" class="form-control">
                     </div>
                     <div class="col-sm-9 form-group">
-                        <button id="btnSearch" class="btn btn-warning btn-sm" type="button"
+                        <button id="btnSearch" class="btn btn-warning btn-xs" type="button"
                                 style="float: right; margin-left: 10px"><i class="icon egojit-front icon-search"></i>&nbsp;搜索
                         </button>
 
@@ -44,9 +44,15 @@
 
                 </form>
             </div>
-
         </div>
-        <div class="ibox-content">
+        <div class="ibox-content" style="padding-top: 10px;">
+            <div id="listOprBox"  class="row  list-title" >
+
+                <button id="btnDelete" onclick="del()" class="btn btn-danger btn-xs "
+                        type="button"><i
+                        class="icon egojit-front icon-delete"></i>&nbsp;删除
+                </button>
+            </div>
             <div class="jqGrid_wrapper">
                 <table id="table_list"></table>
                 <div id="pager_list"></div>
@@ -78,31 +84,26 @@
         //列表初始化
         app.list({
             url: "/admin/log/index",
-            colNames: ["标题", "请求方式", "请求地址", "时间", "操作"],
+            colNames: ["标题", "请求方式", "请求地址", "时间"],
             colModel: [{
                 name: "title",
                 index: "title",
                 editable: true,
                 width: 70
-            }, {name: "method", index: "method", editable: true, width: 30},
+            },
+                {name: "method", index: "method", editable: true, width: 30},
                 {
                     name: "requestUri",
                     index: "requestUri",
-                    editable: true,
-                    width: 100
+                    editable: true
+
                 }, {
                     name: "createDate",
                     index: "createDate",
-                    editable: true
-                },
-                {
-                    name: "id",
-                    index: "id",
-                    width: 60,
+                    editable: true,
+                    width: 80,
                     formatter: function (cellvalue, options, rowObject) {
-                        return '<span class="center-block text-center">' +
-                            '<button id="btnDetail"  class="btn btn-default btn-xs" type="button" style="margin-right: 5px;margin-left: 5px"><i class="icon egojit-front icon-delete"></i>&nbsp;删除</button>' +
-                            '</span>';
+                        return app.time.getLocalTime(cellvalue);
                     }
                 }
             ]

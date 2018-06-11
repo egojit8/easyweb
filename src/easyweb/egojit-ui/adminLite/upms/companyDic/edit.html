@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_jqgrid.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:02 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>数据维护</title>
+    <meta name="keywords" content="数据维护">
+    <meta name="description" content="数据维护">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css"
+          rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/font-awesome.min.css'" rel="stylesheet"
+          href="../asset/css/font-awesome.min.css"/>
+    <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/css/zTreeStyle/zTreeStyle.css'"
+          href="../asset/js/ztree/css/zTreeStyle/zTreeStyle.css"/>
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../asset/css/style.min862f.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            字典信息
+        </div>
+        <div class="row ibox-content">
+            <form class="form-horizontal m-t" id="formSubmit">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <input type="hidden" id="companyId" name="companyId">
+                        <ul id="tree" class="ztree"></ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-3">
+                        <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/jquery.validate.min.js'"
+        src="../asset/js/plugins/validate/jquery.validate.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/messages_zh.min.js'"
+        src="../asset/js/plugins/validate/messages_zh.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/js/jquery.ztree.core.min.js'"
+        src="../asset/js/ztree/js/jquery.ztree.core.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/ztree/js/jquery.ztree.excheck.min.js'"
+        src="../asset/js/ztree/js/jquery.ztree.excheck.min.js"></script>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+<script type="text/javascript">
+    var zTreeObj = undefined;
+
+    /**
+     * 初始化父字典
+     * @param companyId
+     */
+    function initDicTree(companyId) {
+        var settingDic = {
+            async: {
+                enable: true,
+                url: "/admin/companyDic/canSelectTree?companyId=" + companyId,
+                type: "get"
+            },
+            check: {
+                enable: true
+            },
+            view: {
+                selectedMulti: false,
+                showLine: true
+            },
+            callback: {
+                onAsyncSuccess: function (event, treeId, treeNode, msg) {
+                    var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                    var nodes = treeObj.getNodes();
+                    if (nodes && nodes.length > 0) {
+                        treeObj.expandNode(nodes[0], true, false, false);
+                        treeObj.selectNode(nodes[0]);
+                    }
+                }
+            }
+        };
+        zTreeObj = $.fn.zTree.init($("#tree"), settingDic);
+    }
+
+    $().ready(function () {
+        var companyId = app.getRequest()["companyId"];
+        $("#companyId").val(companyId);
+        initDicTree(companyId);
+        $.validator.setDefaults({
+            highlight: function (e) {
+                $(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+            }, success: function (e) {
+                e.closest(".form-group").removeClass("has-error").addClass("has-success")
+            }, errorElement: "span", errorPlacement: function (e, r) {
+                e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+            }, errorClass: "help-block m-b-none", validClass: "help-block m-b-none"
+        })
+        var e = "<i class='fa fa-times-circle'></i> ";
+        var formValidate = {
+            rules: {
+            },
+            messages: {
+            },
+            debug: true,
+            submitHandler: function (form) {
+                var parm =app.getFormJson("#formSubmit");
+                var nodes=  zTreeObj.getCheckedNodes(true);
+                if(!nodes||nodes.length<1){
+                    app.tip("请选择字典数据");
+                    return;
+                }
+                var ids=[];
+                $.each(nodes,function (index,val) {
+                    console.log("val:"+val+"======index:"+index);
+                    ids.push(val.id);
+                })
+                console.log(nodes);
+                var parm=$.extend(parm,{dicIds:JSON.stringify(ids)});
+                console.log(parm);
+                app.post("/admin/companyDic/edit", parm, function (data) {
+                    window.parent.initDicTree(companyId);
+                    app.close();
+                });
+            }
+        };
+        $("#formSubmit").validate(formValidate);
+    });
+</script>
+</body>
+</html>

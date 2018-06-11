@@ -31,10 +31,14 @@ h3, h4, h5 {
     font-weight: 600
 }
 
+
+.full_box{
+    height: 100%;
+}
+
 a:focus {
     outline: 0
 }
-
 .nav > li > a {
     color: #a7b1c2;
     font-weight: 600;
@@ -92,7 +96,17 @@ body.body-small .navbar-top-links li:last-child {
     /*padding: 20px 10px;*/
     /*min-height: 50px*/
 /*}*/
-
+.icon {
+    /* 通过设置 font-size 来改变图标大小 */
+    width: 1em; height: 1em;
+    /* 图标和文字相邻时，垂直对齐 */
+    vertical-align: -0.15em;
+    /* 通过设置 color 来改变 SVG 的颜色/fill */
+    fill: currentColor;
+    /* path 和 stroke 溢出 viewBox 部分在 IE 下会显示
+       normalize.css 中也包含这行 */
+    overflow: hidden;
+}
 .dropdown-menu {
     border: medium none;
     display: none;
@@ -3460,7 +3474,7 @@ code {
     border-width: 4px 0 0;
     color: inherit;
     margin-bottom: 0;
-    padding: 14px 15px 7px;
+    padding: 10px 10px 8px;
     min-height: 48px
 }
 
@@ -3561,7 +3575,9 @@ table.table-mail tr td {
     left: auto;
     right: 0
 }
-
+.list-title{
+    margin-bottom: 10px;
+}
 .gray-bg {
     background-color: #f3f3f4
 }

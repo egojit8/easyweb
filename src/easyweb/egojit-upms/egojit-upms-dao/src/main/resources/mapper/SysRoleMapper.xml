@@ -23,16 +23,16 @@
 
   <select id="getRolesByUser" resultMap="BaseResultMap">
     SELECT <!-- DISTINCT -->
-    *
+    a.*
     FROM sys_role a
     LEFT JOIN sys_user_role ur ON ur.role_id = a.id
     LEFT JOIN sys_user u ON u.id = ur.user_id
     WHERE a.del_flag = #{DEL_FLAG_NORMAL}
-    <if test="user != null and user.id != null and user.id != ''">
-      AND u.id = #{user.id}
+    <if test="id != null and id != ''">
+      AND u.id = #{id}
     </if>
-    <if test="user != null and user.loginName != null and user.loginName != ''">
-      AND u.login_name = #{user.loginName}
+    <if test="loginName != null and loginName != ''">
+      AND u.login_name = #{loginName}
     </if>
     ORDER BY  a.name
   </select>

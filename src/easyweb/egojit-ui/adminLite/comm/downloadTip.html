@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_jqgrid.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:02 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>下载提示</title>
+    <meta name="keywords" content="下载提示">
+    <meta name="description" content="下载提示">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css"
+          rel="stylesheet">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/font-awesome.min.css'" rel="stylesheet"
+          href="../asset/css/font-awesome.min.css"
+    />
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../asset/css/style.min862f.css" rel="stylesheet">
+
+
+</head>
+
+<body class="gray-bg">
+<form class="form-horizontal m-t" id="formSubmit">
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox ">
+            <div class="ibox-title">
+                车队信息
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <input type="hidden" name="id" id="id"/>
+                    <label class="col-sm-2 control-label">车队名称：</label>
+                    <div class="col-sm-4">
+                        <input id="name" name="name" class="form-control" type="text">
+                    </div>
+                    <label class="col-sm-2 control-label">车队编号：</label>
+                    <div class="col-sm-4">
+                        <input id="code" name="code" class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">联系人：</label>
+                    <div class="col-sm-4">
+                        <input id="linkMan" name="linkMan" class="form-control" type="text">
+                    </div>
+                    <label class="col-sm-2 control-label">联系方式：</label>
+                    <div class="col-sm-4">
+                        <input id="linkTel" name="linkTel" class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">地址：</label>
+                    <div class="col-sm-10">
+                        <input id="addressDetail" name="addressDetail" class="form-control"></input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">描述：</label>
+                    <div class="col-sm-10">
+                        <textarea id="remarks" name="remarks" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-3">
+                        <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/jquery.validate.min.js'"
+        src="../asset/js/plugins/validate/jquery.validate.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/messages_zh.min.js'"
+        src="../asset/js/plugins/validate/messages_zh.min.js"></script>
+<!--<script src="js/demo/form-validate-demo.min.js"></script>-->
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+<script type="text/javascript">
+
+
+
+
+    $().ready(function () {
+
+    });
+</script>
+</body>
+</html>

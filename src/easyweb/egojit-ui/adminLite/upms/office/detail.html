@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部门编辑</title>
+    <meta name="keywords" content="用户添加">
+    <meta name="description" content="用户添加">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../../asset/css/animate.min.css"
+          rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../../asset/css/style.min862f.css" rel="stylesheet">
+
+
+</head>
+<body class="gray-bg; " style="height: 100%;" >
+<form class="form-horizontal white-bg" id="formSubmit" style="height: 100%;">
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox ">
+            <div class="ibox-title">
+                机构信息
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">上级机构：</label>
+                    <div class="col-sm-10" id="divOffice">
+                        <label id="parentOffice" name="parentOfficeName" class="form-control" ></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="id" id="id"/>
+                    <label class="col-sm-2 control-label">机构名称：</label>
+                    <div class="col-sm-4">
+                        <label id="name" name="name" class="form-control" ></label>
+                    </div>
+                    <label class="col-sm-2 control-label">企业代码：</label>
+                    <div class="col-sm-4">
+                        <label id="officeNum" name="officeNum" class="form-control" ></label>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">负责人：</label>
+                    <div class="col-sm-4">
+                        <label id="primaryPerson" name="primaryPerson" class="form-control"></label>
+                    </div>
+                    <label class="col-sm-2 control-label">联系电话：</label>
+                    <div class="col-sm-4">
+                        <label id="phone" name="phone" class="form-control"></label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">邮政编码：</label>
+                    <div class="col-sm-4">
+                        <label id="zipCode" name="zipCode" class="form-control"></label>
+                    </div>
+                    <label class="col-sm-2 control-label">机构类型：</label>
+                    <div class="col-sm-4">
+                        <label id="type" name="type" class="form-control"></label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">联系地址：</label>
+                    <div class="col-sm-10">
+                        <label id="address" name="address" class="form-control" ></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">创建人：</label>
+                    <div class="col-sm-4">
+                        <label id="createByName" name="createByName" class="form-control" ></label>
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入工号</span>-->
+                    </div>
+                    <label class="col-sm-2 control-label">创建时间：</label>
+                    <div class="col-sm-4">
+                        <label id="createDate" name="createDate" class="form-control" ></label>
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">备注：</label>
+                    <div class="col-sm-10">
+                        <label id="remarks" name="remarks" class="form-control"></label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../../asset/js/comm.js"></script>
+<script type="text/javascript">
+
+    //渲染界面
+    function  initFormView(data) {
+        app.initDetailLableView("#formSubmit",data);
+        if(data.type=="1"){
+            $("#type").html("企业");
+        }else{
+            $("#type").html("部门");
+        }
+    }
+
+    //获取数据
+    function initView() {
+        var id=app.getRequest()["id"];
+        if(id&&id.length>0){//编辑
+            app.post("/admin/office/detail",{id:id},function (data) {
+                initFormView(data);
+            });
+        }
+
+    }
+
+    $().ready(function () {
+        initView();
+    });
+</script>
+</body>
+</html>

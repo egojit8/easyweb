@@ -34,7 +34,7 @@
 <div class="row animated fadeInRight">
     <div class="col-sm-2" style="padding-left: 0px;padding-right: 0px; overflow-x: scroll;height: 100%">
         <div class="ibox">
-            <div class="ibox-title">部门</div>
+            <div class="ibox-title">企业部门</div>
             <div class="ibox-content">
                 <ul id="tree" class="ztree"></ul>
             </div>
@@ -66,15 +66,18 @@
 
             </div>
             <div class="ibox-content" style="padding-top: 10px">
-                <div class="row" style="margin-bottom: 10px">
+                <div id="listOprBox"   class="row" style="margin-bottom: 10px">
                     <button id="btnAdd" onclick="add()" class="btn btn-primary btn_no_radius btn-xs " type="button">
                         <i class="icon egojit-front icon-add"></i>&nbsp;添加
                     </button>
-                    <button id="btnDelete" onclick="del()" class="btn btn-primary btn_no_radius btn-xs " type="button">
+                    <button id="btnDelete" onclick="del()" class="btn btn-danger btn-xs " type="button">
                         <i class="icon egojit-front icon-delete"></i>&nbsp;删除
                     </button>
-                    <button id="btnPower" onclick="power()" class="btn btn-primary btn_no_radius btn-xs " type="button">
-                        <i class="icon egojit-front icon-power"></i>&nbsp;权限设置
+                    <button id="btnPower" onclick="power()" class="btn btn-primary btn-xs " type="button">
+                        <i class="icon egojit-front icon-power"></i>&nbsp;WEB权限设置
+                    </button>
+                    <button id="btnAppPower" onclick="appPower()" class="btn btn-primary btn-xs " type="button">
+                        <i class="icon egojit-front icon-power"></i>&nbsp;APP权限设置
                     </button>
                 </div>
                 <div class="jqGrid_wrapper">
@@ -163,6 +166,18 @@
             return;
         }
         app.windows("设置权限", "/admin/role/power?id=" + selectIds[0], "400px", "550px");
+    }
+    /**
+     * 权限设置
+     */
+    function appPower(){
+        var selectIds =  $jqGridObj.list.jqGrid('getGridParam', 'selarrrow');
+        console.log(selectIds);
+        if (selectIds == null || selectIds.length != 1) {
+            app.tip("请选择一个角色!");
+            return;
+        }
+        app.windows("app设置权限", "/admin/app/roleMenu/power?id=" + selectIds[0], "400px", "550px");
     }
     //机构的组合
     function getNamesStr(treeNode) {

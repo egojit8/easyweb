@@ -1,13 +1,11 @@
 package com.egojit.easyweb.upms.model;
 
-import com.egojit.easyweb.common.base.BaseEntity;
-import com.egojit.easyweb.common.base.CurdEndity;
+import com.egojit.easyweb.common.base.Entity.BaseDomainEntity;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Table(name = "sys_dict")
-public class SysDict extends CurdEndity {
+public class SysDict extends BaseDomainEntity {
 
 
     /**
@@ -19,6 +17,11 @@ public class SysDict extends CurdEndity {
      * 标签名
      */
     private String label;
+
+    /**
+     * 字典图片
+     */
+    private String dicIamge;
 
     /**
      * 类型
@@ -42,7 +45,10 @@ public class SysDict extends CurdEndity {
     private String parentId;
 
 
-
+    /**
+     * 是否通用字典
+     */
+    private  boolean isComm;
     /**
      * 备注信息
      */
@@ -160,8 +166,6 @@ public class SysDict extends CurdEndity {
 
 
 
-
-
     /**
      * 获取备注信息
      *
@@ -180,5 +184,19 @@ public class SysDict extends CurdEndity {
         this.remarks = remarks;
     }
 
+    public String getDicIamge() {
+        return dicIamge;
+    }
 
+    public void setDicIamge(String dicIamge) {
+        this.dicIamge = dicIamge;
+    }
+
+    public boolean isComm() {
+        return isComm;
+    }
+
+    public void setComm(boolean comm) {
+        isComm = comm;
+    }
 }

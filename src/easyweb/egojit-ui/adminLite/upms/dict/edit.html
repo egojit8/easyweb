@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_jqgrid.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:02 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>字典编辑</title>
+    <meta name="keywords" content="字典编辑">
+    <meta name="description" content="字典编辑">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../asset/css/animate.min.css"
+          rel="stylesheet">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/font-awesome.min.css'" rel="stylesheet"
+          href="../asset/css/font-awesome.min.css"
+    />
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../asset/css/style.min862f.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/webuploader/webuploader.css'"
+          href="../../asset/js/webuploader/webuploader.css">
+
+
+</head>
+
+<body class="gray-bg">
+<form class="form-horizontal" id="formSubmit">
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox ">
+            <div class="ibox-title">
+                字典信息
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <input type="hidden" name="id" id="id"/>
+                    <label class="col-sm-2 control-label">上级字典：</label>
+                    <div class="col-sm-10">
+                        <label class="form-control m-b" id="pName">无上级字典</label>
+                        <input type="hidden" id="parentId" name="parentId" value="all_dic"/>
+                        <!--<select class="form-control m-b" id="parentId" name="parentId">-->
+                        <!--<option value="0" selected="selected">请选择</option>-->
+                        <!--</select>-->
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">名称：</label>
+                    <div class="col-sm-4">
+                        <input id="label" name="label" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
+                    </div>
+                    <label class="col-sm-2 control-label">值：</label>
+                    <div class="col-sm-4">
+                        <input id="value" name="value" class="form-control" type="text">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入工号</span>-->
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">是否通用：</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="comm" name="comm">
+                            <option value="true" selected="selected">是</option>
+                            <option value="false">否</option>
+                        </select>
+                    </div>
+                    <label class="col-sm-2 control-label">排序：</label>
+                    <div class="col-sm-4">
+                        <input id="sort" name="sort" class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">描述：</label>
+                    <div class="col-sm-10">
+                        <textarea id="remarks" name="remarks" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-3">
+                        <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/jquery.validate.min.js'"
+        src="../asset/js/plugins/validate/jquery.validate.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/messages_zh.min.js'"
+        src="../asset/js/plugins/validate/messages_zh.min.js"></script>
+<!--<script src="js/demo/form-validate-demo.min.js"></script>-->
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/webuploader/webuploader.js'"
+        src="../../asset/js/webuploader/webuploader.js"></script>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../asset/js/comm.js"></script>
+<script type="text/javascript">
+    //初始化上级字典
+    function getParent() {
+        app.post("/admin/dict/tree", {'test': 'test'}, function (data) {
+            if (data && data.length > 0) {
+                var html = '';
+                $.each(data, function (index, item) {
+                    html += '<option value="' + item.id + '">' + item.name + '</option>';
+                });
+                $("#parentId").append(html);
+            }
+            getDetail();
+        });
+    }
+
+
+    //获取数据
+    function initView() {
+        var pName = app.getRequest()["pName"];
+        var pId = app.getRequest()["pId"];
+        if (pName && pId) {
+            $("#pName").text(pName);
+            $("#parentId").val(pId);
+        }
+        /**
+         * 初始化父字典
+         */
+        // getParent();
+        getDetail();
+
+    }
+
+
+    /**
+     * 获取详情
+     */
+    function getDetail() {
+        var id = app.getRequest()["id"];
+        if (id && id.length > 0) {//编辑
+            app.post("/admin/dict/detail", {id: id}, function (data) {
+                app.initFormView("#formSubmit", data);
+                $("#imgPre").attr('src', app.config.fileUrl + data.dicIamge);
+                var  isComm=data.comm+"";
+                $("#comm").val(isComm);
+            });
+        }
+    }
+
+    /**
+     * 初始化上传附件
+     */
+    function initUpload() {
+        var uploader = WebUploader.create({
+
+            // swf文件路径
+            swf: '${@viewConfig.getRemoteViewUrl()}asset/js/webuploader/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '/admin/comm/upload',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#picker',
+            auto: true,
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            }
+        });
+        // var $list=$("#thelist");
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            app.loding();
+        });
+        uploader.on('uploadSuccess', function (file, response) {
+            console.log(response);
+            $("#dicIamge").val(response.data);
+            $("#imgPre").attr('src', app.config.fileUrl + response.data);
+        });
+
+        uploader.on('uploadError', function (file) {
+            app.tip("上传出错！")
+        });
+
+        uploader.on('uploadComplete', function (file) {
+            app.close();
+        });
+    }
+
+    $().ready(function () {
+        initView();
+        initUpload();
+        $.validator.setDefaults({
+            highlight: function (e) {
+                $(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+            }, success: function (e) {
+                e.closest(".form-group").removeClass("has-error").addClass("has-success")
+            }, errorElement: "span", errorPlacement: function (e, r) {
+                e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+            }, errorClass: "help-block m-b-none", validClass: "help-block m-b-none"
+        })
+        var e = "<i class='fa fa-times-circle'></i> ";
+        var formValidate = {
+            rules: {
+                label: "required",
+                value: "required",
+                sort:"required"
+            },
+            messages: {
+                label: e + "请输入字典名称",
+                value: e + "请输入字典值",
+                sort: e + "请输入排序",
+            },
+            debug: true,
+            submitHandler: function (form) {
+                var parm = $("#formSubmit").serialize();
+                console.log(parm);
+                app.post("/admin/dict/edit", parm, function (data) {
+                    app.close();
+                    var grid = window.parent.location.reload(); //刷新父页面
+                });
+            }
+        };
+        $("#formSubmit").validate(formValidate);
+    });
+</script>
+</body>
+</html>

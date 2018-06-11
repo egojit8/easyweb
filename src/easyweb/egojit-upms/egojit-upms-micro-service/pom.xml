@@ -5,7 +5,6 @@
 
 	<groupId>com.egojit.easyweb</groupId>
 	<artifactId>egojit-upms-micro-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>egojit-upms-micro-service</name>
@@ -16,8 +15,6 @@
 		<groupId>com.egojit.easyweb</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-
-
 
 	<dependencies>
 		<dependency>
@@ -30,38 +27,17 @@
 			<artifactId>egojit-log-service</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.mybatis.generator</groupId>
-				<artifactId>mybatis-generator-maven-plugin</artifactId>
-				<version>1.3.2</version>
-				<configuration>
-					<configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
-					<overwrite>true</overwrite>
-					<verbose>true</verbose>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>mysql</groupId>
-						<artifactId>mysql-connector-java</artifactId>
-						<version>${mysql.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>tk.mybatis</groupId>
-						<artifactId>mapper</artifactId>
-						<version>${tk.mybatis.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		</plugins>
-	</build>
+		<dependency>
+			<groupId>com.egojit.easyweb</groupId>
+			<artifactId>egojit-upms-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+        <dependency>
+            <groupId>com.egojit.easyweb</groupId>
+            <artifactId>egojit-upms-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 
 </project>

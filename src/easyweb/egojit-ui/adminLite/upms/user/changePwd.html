@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_jqgrid.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:02 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>设置密码</title>
+    <meta name="keywords" content="设置密码">
+    <meta name="description" content="设置密码">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'"
+          href="../../asset/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../../asset/css/fonts/iconfont.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/jqgrid/ui.jqgridffe4.css'"
+          href="../../asset/js/plugins/jqgrid/ui.jqgridffe4.css" rel="stylesheet">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/animate.min.css'" href="../../asset/css/animate.min.css"
+          rel="stylesheet">
+
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/font-awesome.min.css'" rel="stylesheet"
+          href="../../asset/css/font-awesome.min.css"
+    />
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/style.min862f.css'"
+          href="../../asset/css/style.min862f.css" rel="stylesheet">
+
+
+</head>
+
+<body class="gray-bg">
+<form class="form-horizontal" id="formSubmit">
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="ibox ">
+            <div class="ibox-title">
+                设置密码
+            </div>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <input type="hidden" name="userIds" id="userIds"/>
+                    <label class="col-sm-2 control-label">密码：</label>
+                    <div class="col-sm-10">
+                        <input id="password" name="password" class="form-control" type="password">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入姓名</span>-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">确认密码：</label>
+                    <div class="col-sm-10">
+                        <input id="passwordTwo" name="passwordTwo" class="form-control" type="password">
+                        <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请输入工号</span>-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12 col-sm-offset-3">
+                        <button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="ibox float-e-margins">-->
+            <!--<div class="form-group">-->
+                <!--<div class="col-sm-8 col-sm-offset-3">-->
+                    <!--<button class="btn btn-primary" id="btnSubmit" type="submit">提交</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+
+</form>
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/jquery/jQuery-2.2.0.min.js'"
+        src="../../asset/js/jquery/jQuery-2.2.0.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/js/bootstrap.min.js'"
+        src="../../asset/js/bootstrap/js/bootstrap.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/content.min.js'"
+        src="../../asset/js/content.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/jquery.validate.min.js'"
+        src="../../asset/js/plugins/validate/jquery.validate.min.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/layer/layer.js'"
+        src="../../asset/js/plugins/layer/layer.js"></script>
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/plugins/validate/messages_zh.min.js'"
+        src="../../asset/js/plugins/validate/messages_zh.min.js"></script>
+<!--<script src="js/demo/form-validate-demo.min.js"></script>-->
+
+<script th:src="(${@viewConfig.getRemoteViewUrl()})+'asset/js/comm.js'" src="../../asset/js/comm.js"></script>
+<script type="text/javascript">
+
+
+    $().ready(function () {
+        $.validator.setDefaults({
+            highlight: function (e) {
+                $(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+            }, success: function (e) {
+                e.closest(".form-group").removeClass("has-error").addClass("has-success")
+            }, errorElement: "span", errorPlacement: function (e, r) {
+                e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+            }, errorClass: "help-block m-b-none", validClass: "help-block m-b-none"
+        })
+        var e = "<i class='fa fa-times-circle'></i> ";
+        var userIds = app.getRequest()["ids"];
+        debugger;
+        $("#userIds").val(userIds);
+        var formValidate = {
+            rules: {
+                password: "required",
+                passwordTwo: "required"
+            },
+            messages: {
+                name: e + "请输入密码",
+                mobile: e + "请确认密码"
+            },
+            debug: true,
+            submitHandler: function (form) {
+                var parm = $("#formSubmit").serialize();
+                var password = $("#password").val();
+                var passwordTwo = $("#passwordTwo").val();
+                if (password != passwordTwo) {
+                    app.tip("两次密码不一致！");
+                    console.log(password, passwordTwo);
+                }
+                debugger;
+                app.post("/admin/user/changePwd", parm, function (data) {
+                    app.close();
+                    var grid = window.parent.location.reload(); //刷新父页面
+                });
+            }
+        };
+        $("#formSubmit").validate(formValidate);
+    });
+</script>
+</body>
+</html>

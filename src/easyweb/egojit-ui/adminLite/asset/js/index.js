@@ -313,17 +313,17 @@
                             _html += '<li class="treeview">';
                         }
                         _html += '<a href="#">'
-                        _html += '<i class="' + row.icon + '"></i><span>' + row.name + '</span><i class="fa fa-angle-left pull-right"></i>'
+                        _html += '<i class="icon egojit-front ' + row.icon + '"></i><span>' + row.name + '</span><i class="fa fa-angle-left pull-right"></i>'
                         _html += '</a>'
                         var childNodes = $.learunindex.jsonWhere(data, function (v) {
-                            return v.isShow == '1' && v.parentId == row.id
+                            return v.isShow == '1' && v.parentId == row.id&&v.type!='menu_type_button'
                         });
                         if (childNodes.length > 0) {
                             _html += '<ul class="treeview-menu">';
                             $.each(childNodes, function (i) {
                                 var subrow = childNodes[i];
                                 var subchildNodes = $.learunindex.jsonWhere(data, function (v) {
-                                    return v.isShow == '1' &&v.parentId == subrow.id
+                                    return v.isShow == '1' &&v.parentId == subrow.id&&v.type!='menu_type_button'
                                 });
                                 _html += '<li>';
                                 if (subchildNodes.length > 0) {
@@ -381,11 +381,17 @@
                 $.learuntab.init();
             });
 
+        },
+        loadUserInfo:function () {
+            app.post("/admin/getLoginUser", null, function (data){
+                $(".hidden-xs").html(data.loginName);
+            });
         }
     };
     $(function () {
         $.learunindex.load();
         $.learunindex.loadMenu();
+        $.learunindex.loadUserInfo();
 
     });
 })(jQuery);

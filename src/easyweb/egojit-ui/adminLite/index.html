@@ -4,8 +4,23 @@
     <title>EasyWeb开发框架</title>
     <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/js/bootstrap/css/bootstrap.min.css'" href="asset/js/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/font-awesome.min.css'" href="asset/css/font-awesome.min.css">
+    <link th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/fonts/iconfont.css'"
+          href="../asset/css/fonts/iconfont.css" rel="stylesheet"/>
     <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/index.css'" href="asset/css/index.css">
     <link rel="stylesheet" th:href="(${@viewConfig.getRemoteViewUrl()})+'asset/css/skins/all-skins.css'" href="asset/css/skins/all-skins.css">
+<style type="text/css">
+    .icon {
+        /* 通过设置 font-size 来改变图标大小 */
+        width: 1em; height: 1em;
+        /* 图标和文字相邻时，垂直对齐 */
+        vertical-align: -0.15em;
+        /* 通过设置 color 来改变 SVG 的颜色/fill */
+        fill: currentColor;
+        /* path 和 stroke 溢出 viewBox 部分在 IE 下会显示
+           normalize.css 中也包含这行 */
+        overflow: hidden;
+    }
+</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini" style="overflow:hidden;">
     <div id="ajax-loader" style="cursor: progress; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: #fff; z-index: 10000; overflow: hidden;">
@@ -15,8 +30,8 @@
         <!--头部信息-->
         <header class="main-header">
             <a href="" target="_blank" class="logo">
-                <span class="logo-mini">EW</span>
-                <span class="logo-lg">EasyWeb<strong>敏捷框架</strong></span>
+                <span class="logo-mini">JTLT</span>
+                <span class="logo-lg">佳通轮胎<strong>管理系统</strong></span>
             </a>
             <nav class="navbar navbar-static-top">
                 <a class="sidebar-toggle">
@@ -24,28 +39,28 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <li class="dropdown messages-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope-o "></i>
-                                <span class="label label-success">4</span>
-                            </a>
-                        </li>
-                        <li class="dropdown notifications-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">10</span>
-                            </a>
-                        </li>
-                        <li class="dropdown tasks-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-flag-o"></i>
-                                <span class="label label-danger">9</span>
-                            </a>
-                        </li>
+                        <!--<li class="dropdown messages-menu">-->
+                            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
+                                <!--<i class="fa fa-envelope-o "></i>-->
+                                <!--<span class="label label-success">4</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li class="dropdown notifications-menu">-->
+                            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
+                                <!--<i class="fa fa-bell-o"></i>-->
+                                <!--<span class="label label-warning">10</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li class="dropdown tasks-menu">-->
+                            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
+                                <!--<i class="fa fa-flag-o"></i>-->
+                                <!--<span class="label label-danger">9</span>-->
+                            <!--</a>-->
+                        <!--</li>-->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="" class="user-image" alt="头像">
-                                <span class="hidden-xs">administrator</span>
+                                <span class="hidden-xs"></span>
                             </a>
                             <ul class="dropdown-menu pull-right">
                                 <li><a class="menuItem" data-id="userInfo" href="/SystemManage/User/Info"><i class="fa fa-user"></i>个人信息</a></li>
@@ -62,23 +77,23 @@
         <!--左边导航-->
         <div class="main-sidebar">
             <div class="sidebar">
-                <div class="user-panel">
-                    <div class="pull-left image">
-                        <img src="asset/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                    </div>
-                    <div class="pull-left info">
-                        <p>administrator</p>
-                        <a><i class="fa fa-circle text-success"></i>在线</a>
-                    </div>
-                </div>
-                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <a class="btn btn-flat"><i class="fa fa-search"></i></a>
-                        </span>
-                    </div>
-                </form>
+                <!--<div class="user-panel">-->
+                    <!--<div class="pull-left image">-->
+                        <!--<img src="asset/img/user2-160x160.jpg" class="img-circle" alt="User Image">-->
+                    <!--</div>-->
+                    <!--<div class="pull-left info">-->
+                        <!--<p id="leftUserName"></p>-->
+                        <!--&lt;!&ndash;<a><i class="fa fa-circle text-success"></i>在线</a>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<form action="#" method="get" class="sidebar-form">-->
+                    <!--<div class="input-group">-->
+                        <!--<input type="text" name="q" class="form-control" placeholder="Search...">-->
+                        <!--<span class="input-group-btn">-->
+                            <!--<a class="btn btn-flat"><i class="fa fa-search"></i></a>-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</form>-->
                 <ul class="sidebar-menu" id="sidebar-menu">
                     <!--<li class="header">导航菜单</li>-->
                 </ul>
@@ -92,7 +107,7 @@
                 </button>
                 <nav class="page-tabs menuTabs">
                     <div class="page-tabs-content" style="margin-left: 0px;">
-                        <a href="javascript:;" class="menuTab active" data-id="/oss/default">欢迎首页</a>
+                        <a href="javascript:;" class="menuTab active" data-id="/admin/default">欢迎首页</a>
                     </div>
                 </nav>
                 <button class="roll-nav roll-right tabRight">
@@ -113,7 +128,7 @@
             </div>
             <div class="content-iframe" style="overflow: hidden;">
                 <div class="mainContent" id="content-main" style="margin: 5px;">
-                    <iframe class="LRADMS_iframe" width="100%" height="100%" src="default.html" frameborder="0" data-id="default.html"></iframe>
+                    <iframe class="LRADMS_iframe" width="100%" height="100%" src="/admin/default" frameborder="0" data-id="/admin/default"></iframe>
                 </div>
             </div>
         </div>

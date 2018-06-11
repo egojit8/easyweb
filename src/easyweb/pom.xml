@@ -22,6 +22,7 @@
         <module>egojit-common</module>
         <module>egojit-web</module>
         <module>egojit-workflow</module>
+        <module>egojit-msg</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
